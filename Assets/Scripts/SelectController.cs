@@ -22,10 +22,9 @@ public class SelectController : MonoBehaviour {
     }
 
     private void Start() {
-        if (interactableLayermask == 0) Error("LAYERMASK IS NULL");
+        if (interactableLayermask == 0) Error("Layermask is null!");
         if (Camera.main != null) cam = Camera.main;
-        if(ui.panel == null) Error("INFO PANEL IS NULL");
-        if(selectObject == null) Error("SELECT OBJET IS NULL");
+        if(selectObject == null) Error("Selector object is null!");
     }
 
     private void Update() {
@@ -38,6 +37,7 @@ public class SelectController : MonoBehaviour {
         
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, interactableLayermask)) {
             Select(hit);
+            return;
         }
         DeSelect();
     }
@@ -49,7 +49,7 @@ public class SelectController : MonoBehaviour {
     }
 
     private void Select(RaycastHit hit) {
-        if(hit.transform.GetComponentInParent<UnitObject>() == null) Error("TRIED TO SELECT NULL UNIT");
+        if(hit.transform.GetComponentInParent<UnitObject>() == null) Error("Cant find UnitObject on hit transform!");
         selectedUnit = hit.transform.GetComponentInParent<UnitObject>();
         ui.panel.SetActive(true);
         ui.name.text = selectedUnit.Unit.name;

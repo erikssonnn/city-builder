@@ -10,10 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18381657a99a8db49a273ccd8d34fe25, type: 3}
-  m_Name: 0_house
+  m_Name: 2_road
   m_EditorClassIdentifier: 
-  index: 0
-  name: House
+  index: 2
+  name: Road
   description: PLACEHOLDER
-  icon: {fileID: 21300000, guid: d9c2ca272c26dec4ebd1f23ac47b7229, type: 3}
-  interactType: 0
+  icon: {fileID: 21300000, guid: 0805bca479bf45846a4fe1c7600d3d18, type: 3}
+  unitType: 0
+  buildingType: 0
+  buildingSize: {x: 4, y: 0, z: 4}
+  buildingPrefab: {fileID: 2238579592139572700, guid: 2ca587c0314b96249a7154634cf9ff9b, type: 3}
