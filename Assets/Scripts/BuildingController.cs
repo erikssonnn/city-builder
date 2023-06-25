@@ -9,6 +9,7 @@ public class BuildingController : MonoBehaviour {
     [SerializeField] private GameObject placeholder = null;
     [SerializeField] private LayerMask lm = 0;
     [SerializeField] private Material matGreen, matRed = null;
+    [SerializeField] private Transform buildingsParent = null;
     [SerializeField] private Unit[] units = null;
 
     private MapController mapController = null;
@@ -47,17 +48,22 @@ public class BuildingController : MonoBehaviour {
             PositionBuilding(placeholder, hit.point);
         }
 
-
         if (EventSystem.current.IsPointerOverGameObject(-1)) {
             return;
+        }
+        
+        if (Input.GetMouseButtonDown(1)) {
+            placingBuilding = false;
+            placeholder.SetActive(false);
         }
 
         if (Input.GetMouseButtonDown(0) && CanPlace()) {
             UnitObject unitObject = placeholder.GetComponent<UnitObject>();
-            Instantiate(unitObject.Unit.buildingPrefab, placeholder.transform.position, Quaternion.identity);
-
+            GameObject newObj = Instantiate(unitObject.Unit.buildingPrefab, placeholder.transform.position, Quaternion.identity, buildingsParent);
+            
             List<Vector3Int> temp = unitObject.GetBuildingPositions(placeholder.transform.position);
             foreach (Vector3Int t in temp.Where(t => !mapController.Map.Contains(t))) {
+                newObj.GetComponent<UnitObject>().Positions.Add(t);
                 mapController.Map.Add(t);
             }
 

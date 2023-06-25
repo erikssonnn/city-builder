@@ -4,6 +4,8 @@ using UnityEngine;
 public class UnitObject : MonoBehaviour {
     [SerializeField] private Unit unit;
 
+    public List<Vector3Int> Positions { get; set; } = new List<Vector3Int>();
+
     public Unit Unit {
         get => unit;
         set => unit = value;

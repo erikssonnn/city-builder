@@ -8,7 +8,7 @@ public class CameraController : MonoBehaviour {
     [SerializeField] private float scrollSpeed = 0.0f;
 
     private Camera cam = null;
-    private float downScale = 0.1f;
+    private const float downScale = 0.1f;
 
     private void Start() {
         if (Camera.main != null) cam = Camera.main;
