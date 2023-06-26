@@ -1,18 +1,19 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class UnitObject : MonoBehaviour {
-    [SerializeField] private Unit unit;
+public class BuildingObject : MonoBehaviour {
+    [FormerlySerializedAs("unit")] [SerializeField] private Building building;
 
     public List<Vector3Int> Positions { get; set; } = new List<Vector3Int>();
 
-    public Unit Unit {
-        get => unit;
-        set => unit = value;
+    public Building Building {
+        get => building;
+        set => building = value;
     }
 
     public List<Vector3Int> GetBuildingPositions(Vector3 pos) {
-        Vector3Int size = Unit.buildingSize;
+        Vector3Int size = Building.buildingSize;
         List<Vector3Int> ret = new List<Vector3Int>();
 
         Vector3Int roundedPos =

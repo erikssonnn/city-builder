@@ -120,6 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1381353238814050785}
   - component: {fileID: 6609982870951180680}
+  - component: {fileID: 1762351007321419512}
   m_Layer: 6
   m_Name: 0_hut
   m_TagString: Untagged
@@ -155,7 +156,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca42bd537af0d54094a036dfa889639, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unit: {fileID: 11400000, guid: b872554acabb33543b7947ae38b4bea9, type: 2}
+  building: {fileID: 11400000, guid: b872554acabb33543b7947ae38b4bea9, type: 2}
+--- !u!208 &1762351007321419512
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7826425774087933323}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 2.5, y: 1.5, z: 2.5}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 1.5, z: 0}
+  m_TimeToStationary: 0.5
 --- !u!1001 &6299133310239015379
 PrefabInstance:
   m_ObjectHideFlags: 0

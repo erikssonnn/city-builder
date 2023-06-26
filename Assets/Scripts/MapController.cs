@@ -13,7 +13,7 @@ public class MapController : MonoBehaviour {
     
     private void OnDrawGizmos() {
         if (map == null) return;
-
+        
         Gizmos.color = Color.yellow;
         foreach (Vector3 center in map.Select(position => new Vector3(position.x + 0.5f, position.y + 0.5f, position.z + 0.5f))) {
             Gizmos.DrawCube(center, Vector3.one);

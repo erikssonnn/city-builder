@@ -16,18 +16,22 @@ public class SelectController : MonoBehaviour {
     [SerializeField] private Ui ui = new Ui();
 
     private Camera cam = null;
-    private UnitObject selectedUnit = null;
+    private BuildingObject selectedBuilding = null;
     private MapController mapController = null;
 
-    private static void Error(string msg) {
-        Debug.LogError(msg);
-        Debug.Break();
-    }
-
     private void Start() {
-        if (lm == 0) Error("Layermask is null!");
-        if (Camera.main != null) cam = Camera.main;
-        if(highlightObject == null) Error("Selector object is null!");
+        if (lm == 0) {
+            throw new System.Exception("Layermask is null!");
+        }
+
+        if (Camera.main != null) {
+            cam = Camera.main;
+        }
+
+        if (highlightObject == null) {
+            throw new System.Exception("Selector object is null!");
+        }
+        
         mapController = FindObjectOfType<MapController>();
     }
 
@@ -36,22 +40,27 @@ public class SelectController : MonoBehaviour {
     }
     
     public void DeleteBuildingEvent() {
-        if (selectedUnit == null) Error("Tried to delete a null building!");
-        if (selectedUnit.Positions.Count == 0) Error("Building has zero occupied positions!");
-        foreach (Vector3Int pos in selectedUnit.Positions) {
+        if (selectedBuilding == null) {
+            throw new System.Exception("Tried to delete a null building!");
+        }
+        if (selectedBuilding.Positions.Count == 0) {
+            throw new System.Exception("Building has zero occupied positions!");
+        }
+        
+        foreach (Vector3Int pos in selectedBuilding.Positions) {
             if (mapController.Map.Contains(pos)) {
                 mapController.Map.Remove(pos);
             }
         }
-        Destroy(selectedUnit.gameObject);
+        Destroy(selectedBuilding.gameObject);
         DeSelect();
-        selectedUnit = null;
+        selectedBuilding = null;
     }
 
     private void RaycastCheck() {
         if (!Input.GetMouseButtonDown(0)) return;
+
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, lm)) {
             Select(hit);
             return;
@@ -64,19 +73,24 @@ public class SelectController : MonoBehaviour {
 
     private void DeSelect() {
         highlightObject.SetActive(false);
-        selectedUnit = null;
+        selectedBuilding = null;
         ui.panel.SetActive(false);
     }
 
     private void Select(RaycastHit hit) {
-        if(hit.transform.GetComponentInParent<UnitObject>() == null) Error("Cant find UnitObject on hit transform!");
-        selectedUnit = hit.transform.GetComponentInParent<UnitObject>();
+        if (hit.transform.GetComponentInParent<BuildingObject>() == null) {
+            throw new System.Exception("Cant find UnitObject on hit transform!");
+        }
+        
+        selectedBuilding = hit.transform.GetComponentInParent<BuildingObject>();
         ui.panel.SetActive(true);
-        ui.name.text = selectedUnit.Unit.name;
-        ui.icon.sprite = selectedUnit.Unit.icon;
-        highlightObject.transform.position = selectedUnit.transform.position;
+        ui.name.text = selectedBuilding.Building.name;
+        ui.icon.sprite = selectedBuilding.Building.icon;
+
+        Transform selectedBuildingTransform = selectedBuilding.transform;
+        highlightObject.transform.SetPositionAndRotation(selectedBuildingTransform.position, selectedBuildingTransform.rotation);
         highlightObject.GetComponentInChildren<MeshFilter>().sharedMesh =
-            selectedUnit.transform.GetComponentInChildren<MeshFilter>().sharedMesh;
+            selectedBuilding.transform.GetComponentInChildren<MeshFilter>().sharedMesh;
         highlightObject.SetActive(true);
     }
 }

@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class CameraController : MonoBehaviour {
     [SerializeField] private float panSpeed = 0.0f;
@@ -11,7 +9,9 @@ public class CameraController : MonoBehaviour {
     private const float downScale = 0.1f;
 
     private void Start() {
-        if (Camera.main != null) cam = Camera.main;
+        if (Camera.main != null) {
+            cam = Camera.main;
+        }
     }
 
     private void Update() {
@@ -35,14 +35,16 @@ public class CameraController : MonoBehaviour {
     private void ScrollMovement() {
         float x = Input.GetAxisRaw("Mouse X");
         float y = Input.GetAxisRaw("Mouse Y");
-        Vector3 pos = transform.position -= new Vector3(x, 0, y) * (scrollPanSpeed * Time.fixedDeltaTime * cam.orthographicSize * downScale);
+        Vector3 pos = transform.position -= new Vector3(x, 0, y) *
+            (scrollPanSpeed * Time.fixedDeltaTime * cam.orthographicSize * downScale);
         transform.position = pos;
     }
 
     private void Movement() {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
-        Vector3 pos = transform.position += new Vector3(x, 0, y) * (panSpeed * Time.fixedDeltaTime * cam.orthographicSize * downScale);
+        Vector3 pos = transform.position +=
+            new Vector3(x, 0, y) * (panSpeed * Time.fixedDeltaTime * cam.orthographicSize * downScale);
         transform.position = pos;
     }
 }
