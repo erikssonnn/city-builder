@@ -1,24 +1,25 @@
+using System;
 using System.Collections.Generic;
 using ScriptableObjects;
 using UnityEngine;
 
-public class BuildingObject : MonoBehaviour {
-    [SerializeField] private Building building;
+public class ResourceObject : MonoBehaviour {
+    [SerializeField] private Resource resource;
     public List<Vector3Int> Positions { get; set; } = new List<Vector3Int>();
 
-    public Building Building {
-        get => building;
-        set => building = value;
+    public Resource Resource {
+        get => resource;
+        set => resource = value;
     }
-    
+
     private void Start() {
-        if (building == null) {
-            throw new System.Exception("Building is null!");
+        if (resource == null) {
+            throw new System.Exception("Resource is null!");
         }
     }
 
-    public List<Vector3Int> GetBuildingPositions(Vector3 pos, Quaternion rotation) {
-        Vector3Int size = Building.size;
+    public List<Vector3Int> GetResourcePositions(Vector3 pos, Quaternion rotation) {
+        Vector3Int size = Resource.size;
         List<Vector3Int> ret = new List<Vector3Int>();
 
         Vector3Int roundedPos =

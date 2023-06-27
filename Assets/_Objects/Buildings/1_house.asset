@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 1
   name: House
-  description: PLACEHOLDER
   icon: {fileID: 21300000, guid: d9c2ca272c26dec4ebd1f23ac47b7229, type: 3}
-  unitType: 0
   buildingType: 0
-  buildingSize: {x: 8, y: 0, z: 8}
-  buildingPrefab: {fileID: 5736254678674322557, guid: 86d6b77766c011643be6d25eaeb9b682, type: 3}
+  size: {x: 9, y: 0, z: 8}
+  prefab: {fileID: 5736254678674322557, guid: 86d6b77766c011643be6d25eaeb9b682, type: 3}
+  cost:
+    food: 0
+    wood: -4
+    stone: -10

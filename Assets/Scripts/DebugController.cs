@@ -2,14 +2,20 @@ using UnityEngine;
 
 public class DebugController : MonoBehaviour {
     [SerializeField] private GameObject unitObj = null;
+    [SerializeField] private GameObject parent = null;
     [SerializeField] private LayerMask lm = 0;
 
     private Camera cam = null;
-    
+
     private void Start() {
+        if (parent == null) {
+            throw new System.Exception("Unit parent is null on " + name);
+        }
+
         if (unitObj == null) {
             throw new System.Exception("UnitObj is null on " + name);
         }
+
         cam = Camera.main;
         if (cam == null) {
             throw new System.Exception("Camera cant be found!");
@@ -19,9 +25,9 @@ public class DebugController : MonoBehaviour {
     private void Update() {
         if (Input.GetKeyDown(KeyCode.P)) {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        
+
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, lm)) {
-                Instantiate(unitObj, hit.point, Quaternion.identity);
+                Instantiate(unitObj, hit.point, Quaternion.identity, parent.transform);
             }
         }
     }

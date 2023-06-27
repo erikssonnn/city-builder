@@ -15,10 +15,11 @@ public class UnitController : MonoBehaviour {
     private NavMeshAgent agent = null;
     private int index = -1;
     private float velMag = 0;
-    private readonly List<Vector3> path = new List<Vector3>();
+    private readonly Dictionary<int, Vector3> path = new Dictionary<int, Vector3>();
     private bool isCreatingPath = false;
     private Camera cam = null;
     private Transform t = null;
+    private MapController mapController = null;
     private const float downScale = 0.1f;
 
     private void OnDrawGizmos() {
@@ -27,14 +28,19 @@ public class UnitController : MonoBehaviour {
         Gizmos.DrawCube(path[index], Vector3.one);
 
         if (path.Count <= 0) return;
-        foreach (Vector3 node in path) {
+        foreach (KeyValuePair<int, Vector3> node in path) {
             Gizmos.color = Color.magenta;
-            Gizmos.DrawCube(node, Vector3.one * 0.5f);
+            Gizmos.DrawCube(node.Value, Vector3.one * 0.5f);
         }
     }
 
     private void Start() {
         t = transform;
+        mapController = FindObjectOfType<MapController>();
+        if (mapController == null) {
+            throw new System.Exception("Could not find MapController");
+        }
+
         cam = Camera.main;
         if (cam == null)
             throw new System.Exception("Could not find Main Camera!");
@@ -54,7 +60,7 @@ public class UnitController : MonoBehaviour {
             }
         }
 
-        // CheckStuck();
+        CheckStuck();
         if (path.Count <= 0 || index == -1) return;
 
         Vector3 lookPos = path[index] - t.position;
@@ -63,7 +69,7 @@ public class UnitController : MonoBehaviour {
         t.rotation = Quaternion.Slerp(t.rotation, rot, Time.fixedDeltaTime * rotSpeed);
 
         t.Translate(t.TransformDirection(Vector3.forward) * (speed * downScale * Time.fixedDeltaTime), Space.World);
-        
+
         float dist = Vector3.Distance(t.position, path[index]);
         if (dist > 0.5f) return;
         if (index >= path.Count - 1) {
@@ -71,12 +77,22 @@ public class UnitController : MonoBehaviour {
             StartCoroutine(CreatePath(GetRandomPos()));
             return;
         }
+
         index++;
     }
 
-    private static Vector3 GetRandomPos() {
-        return new Vector3(Random.Range(-25f, 25f), 0, Random.Range(-25f, 25f));
+    private Vector3 GetRandomPos() {
+        Vector2 size = mapController.MapSize;
+
+        Vector3 randomPos = Random.insideUnitCircle * 10f;
+        Vector3 ret = transform.position + new Vector3(randomPos.x, 0f, randomPos.y);
+
+        ret.x = Mathf.Clamp(ret.x, -size.x, size.x);
+        ret.z = Mathf.Clamp(ret.z, -size.y, size.y);
+
+        return ret;
     }
+
 
     private IEnumerator CreatePath(Vector3 targetPos) {
         if (isCreatingPath) {
@@ -98,15 +114,14 @@ public class UnitController : MonoBehaviour {
         }
 
         if (agent.pathPending || agent.path.status != NavMeshPathStatus.PathComplete) {
-            print("THIS SHOULD NOT HAPPEN RIGHT");
             StopCoroutine(CreatePath(targetPos));
         }
 
         NavMeshPath agentPath = agent.path;
         agent.enabled = false;
 
-        foreach (Vector3 node in agentPath.corners.Where(node => !path.Contains(node))) {
-            path.Add(node);
+        foreach (Vector3 node in agentPath.corners.Where(node => !path.ContainsValue(node))) {
+            path.Add(path.Count, node);
         }
 
         index = 0;
