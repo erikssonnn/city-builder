@@ -13,15 +13,21 @@ public class BuildingController : MonoBehaviour {
 
     [FormerlySerializedAs("units")] [SerializeField]
     private Building[] buildings = null;
-
     private MapController mapController = null;
-    private bool placingBuilding = false;
+    public bool PlacingBuilding { get; private set; } = false;
+
     private Camera cam = null;
     private List<Vector3Int> positions = new List<Vector3Int>();
     private ResourceController resourceController = null;
+    private SelectController selectController = null;
     private Building selectedBuilding = null;
 
     private void Start() {
+        NullObjectCheck();
+        PlaceStartBuilding();
+    }
+
+    private void NullObjectCheck() {
         mapController = FindObjectOfType<MapController>();
         if (mapController == null) {
             throw new System.Exception("Cant find MapController instance!");
@@ -31,10 +37,21 @@ public class BuildingController : MonoBehaviour {
         if (resourceController == null) {
             throw new System.Exception("Cant find ResourceController instance!");
         }
+        
+        selectController = FindObjectOfType<SelectController>();
+        if (selectController == null) {
+            throw new System.Exception("Cant find SelectController instance!");
+        }
 
         if (Camera.main != null) {
             cam = Camera.main;
         }
+    }
+
+    private void PlaceStartBuilding() {
+        BuildingObject buildingObject = placeholder.GetComponent<BuildingObject>();
+        buildingObject.Building = buildings[3];
+        PlaceBuilding(buildingObject, Vector3.zero, Quaternion.identity);
     }
 
     public void HoverBuildingEvent(int index) {
@@ -52,6 +69,8 @@ public class BuildingController : MonoBehaviour {
     }
 
     public void NewBuildingEvent(int index) {
+        selectController.DeSelect();
+        
         selectedBuilding = buildings[index];
         if (selectedBuilding == null) {
             throw new System.Exception("SelectedBuilding is null!");
@@ -64,11 +83,26 @@ public class BuildingController : MonoBehaviour {
         placeholder.GetComponentInChildren<MeshFilter>().sharedMesh =
             selectedBuilding.prefab.GetComponentInChildren<MeshFilter>().sharedMesh;
         placeholder.SetActive(true);
-        placingBuilding = true;
+        PlacingBuilding = true;
     }
 
     private void LateUpdate() {
-        if (!placingBuilding) return;
+        IsPlacingBuilding();
+    }
+
+    private void PlaceBuilding(BuildingObject buildingObject, Vector3 pos, Quaternion rot) {
+        GameObject newObj = Instantiate(buildingObject.Building.prefab, placeholder.transform.position,
+            placeholder.transform.rotation, buildingsParent);
+
+        List<Vector3Int> temp = buildingObject.GetBuildingPositions(pos, rot);
+        foreach (Vector3Int t in temp.Where(t => !mapController.Map.Contains(t))) {
+            newObj.GetComponent<BuildingObject>().Positions.Add(t);
+            mapController.Map.Add(t);
+        }
+    }
+    
+    private void IsPlacingBuilding() {
+        if (!PlacingBuilding) return;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, lm)) {
@@ -94,28 +128,19 @@ public class BuildingController : MonoBehaviour {
             CancelPlacingBuilding();
         }
 
-        if (Input.GetMouseButtonDown(0) && CanPlace()) {
-            BuildingObject buildingObject = placeholder.GetComponent<BuildingObject>();
-            Transform placeholderT = placeholder.transform;
-            GameObject newObj = Instantiate(buildingObject.Building.prefab, placeholder.transform.position,
-                placeholder.transform.rotation, buildingsParent);
+        if (!Input.GetMouseButtonDown(0) || !CanPlace()) return;
+        BuildingObject buildingObject = placeholder.GetComponent<BuildingObject>();
+        Transform placeholderT = placeholder.transform;
 
-            List<Vector3Int> temp = buildingObject.GetBuildingPositions(placeholderT.position, placeholderT.rotation);
-            foreach (Vector3Int t in temp.Where(t => !mapController.Map.Contains(t))) {
-                newObj.GetComponent<BuildingObject>().Positions.Add(t);
-                mapController.Map.Add(t);
-            }
+        PlaceBuilding(buildingObject, placeholderT.position, placeholderT.rotation);
 
-            print("cost: " + cost.wood);
-            resourceController.ChangeResource(cost);
-
-            placingBuilding = false;
-            placeholder.SetActive(false);
-        }
+        resourceController.ChangeResource(cost);
+        PlacingBuilding = false;
+        placeholder.SetActive(false);
     }
 
     private void CancelPlacingBuilding() {
-        placingBuilding = false;
+        PlacingBuilding = false;
         placeholder.SetActive(false);
     }
 

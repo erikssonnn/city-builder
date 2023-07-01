@@ -17,9 +17,14 @@ public class SelectController : MonoBehaviour {
 
     private Camera cam = null;
     private BuildingObject selectedBuilding = null;
+    private BuildingController buildingController = null;
     private MapController mapController = null;
 
     private void Start() {
+        NullObjectCheck();
+    }
+
+    private void NullObjectCheck() {
         if (lm == 0) {
             throw new System.Exception("Layermask is null!");
         }
@@ -32,7 +37,15 @@ public class SelectController : MonoBehaviour {
             throw new System.Exception("Selector object is null!");
         }
         
+        buildingController = FindObjectOfType<BuildingController>();
+        if (buildingController == null) {
+            throw new System.Exception("Cant find BuildingController instance!");
+        }
+        
         mapController = FindObjectOfType<MapController>();
+        if (mapController == null) {
+            throw new System.Exception("Cant find MapController instance!");
+        }
     }
 
     private void Update() {
@@ -59,7 +72,8 @@ public class SelectController : MonoBehaviour {
 
     private void RaycastCheck() {
         if (!Input.GetMouseButtonDown(0)) return;
-
+        if (buildingController.PlacingBuilding) return;
+        
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, lm)) {
             Select(hit);
@@ -71,7 +85,7 @@ public class SelectController : MonoBehaviour {
         }
     }
 
-    private void DeSelect() {
+    public void DeSelect() {
         highlightObject.SetActive(false);
         selectedBuilding = null;
         ui.panel.SetActive(false);

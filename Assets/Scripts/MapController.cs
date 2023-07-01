@@ -8,13 +8,12 @@ public class MapController : MonoBehaviour {
     [SerializeField] private int resourceMultiplier = 1000;
     [SerializeField] private GameObject resourcesParent = null;
     [SerializeField] private Resource[] resources = null;
+    public List<Vector3Int> Map { get; set; } = new List<Vector3Int>();
 
     public Vector2Int MapSize {
         get => mapSize;
         set => mapSize = value;
     }
-
-    public List<Vector3Int> Map { get; set; } = new List<Vector3Int>();
 
     private void OnDrawGizmos() {
         if (Map == null) return;
@@ -30,12 +29,18 @@ public class MapController : MonoBehaviour {
         if (resourcesParent == null) {
             throw new System.Exception("ResourceParent is null!");
         }
-
         GenerateResources();
     }
 
     private Vector3Int GetRandomPos() {
         return new Vector3Int(Random.Range(-MapSize.x, MapSize.x), 0, Random.Range(-MapSize.y, MapSize.y));
+    }
+
+    private static bool IsInStartArea(IEnumerable<Vector3Int> obj) {
+        return obj.Any(t => {
+            Vector3 position = new Vector3(t.x, t.y, t.z);
+            return (position.x >= -10 && position.x <= 10) && (position.z >= -10 && position.z <= 10);
+        });
     }
 
     public bool IntersectsMapPos(IEnumerable<Vector3Int> obj) {
@@ -62,7 +67,7 @@ public class MapController : MonoBehaviour {
         if (Map.Contains(randomPos)) {
             SpawnResource(res);
         }
-
+        
         Quaternion rot = res.randomRot ? 
             Quaternion.Euler(new Vector3(0, Random.Range(-180, 180), 0)) : Quaternion.identity;
         GameObject newObj = Instantiate(res.prefab, randomPos, rot, resourcesParent.transform);
@@ -75,7 +80,7 @@ public class MapController : MonoBehaviour {
         Transform resourceT = resourceObject.transform;
         List<Vector3Int> positions = resourceObject.GetResourcePositions(resourceT.position, resourceT.rotation);
 
-        if (!CanPlace(positions)) {
+        if (!CanPlace(positions) || IsInStartArea(positions)) {
             SpawnResource(res);
             Destroy(newObj);
             return;

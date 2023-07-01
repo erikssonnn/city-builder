@@ -16,5 +16,5 @@ MonoBehaviour:
   prefab: {fileID: 1413586944226612652, guid: 3e05598f95b833940aeb184f460dbd13, type: 3}
   value: 200
   size: {x: 4, y: 0, z: 4}
-  rarity: 0.5
+  rarity: 0.2
   randomRot: 1
