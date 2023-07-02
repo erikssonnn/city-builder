@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   index: 3
   name: Firepit
-  icon: {fileID: 21300000, guid: 0805bca479bf45846a4fe1c7600d3d18, type: 3}
+  icon: {fileID: 21300000, guid: d4ea1b3465b5228498a6a9920e1f5f70, type: 3}
   buildingType: 0
+  capacity: 0
   size: {x: 4, y: 0, z: 4}
   prefab: {fileID: 7159377156150646154, guid: e530422038d36034d89327f205613e07, type: 3}
   cost:
     food: 0
-    wood: 4
+    wood: -4
     stone: 0

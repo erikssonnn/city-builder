@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace ScriptableObjects {
-    public enum BuildingType { DEFAULT }
+    public enum BuildingType { DEFAULT, WORKSTATION }
 
     [System.Serializable] 
     public class BuildingCost {
@@ -24,6 +24,7 @@ namespace ScriptableObjects {
         public new string name;
         public Sprite icon;
         public BuildingType buildingType;
+        public int capacity;
         [FormerlySerializedAs("buildingSize")] public Vector3Int size;
         [FormerlySerializedAs("buildingPrefab")] public GameObject prefab;
         public BuildingCost cost;

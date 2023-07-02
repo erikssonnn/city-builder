@@ -16,6 +16,7 @@ MonoBehaviour:
   name: House
   icon: {fileID: 21300000, guid: d9c2ca272c26dec4ebd1f23ac47b7229, type: 3}
   buildingType: 0
+  capacity: 10
   size: {x: 9, y: 0, z: 8}
   prefab: {fileID: 5736254678674322557, guid: 86d6b77766c011643be6d25eaeb9b682, type: 3}
   cost:

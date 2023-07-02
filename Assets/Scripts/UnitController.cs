@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using ScriptableObjects;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -21,6 +21,8 @@ public class UnitController : MonoBehaviour {
     private Transform t = null;
     private MapController mapController = null;
     private const float downScale = 0.1f;
+
+    public Occupation Occupation { get; set; } = null;
 
     private void OnDrawGizmos() {
         if (path.Count <= 0 || index == -1) return;
@@ -59,6 +61,7 @@ public class UnitController : MonoBehaviour {
                 StartCoroutine(CreatePath(hit.point));
             }
         }
+        //
 
         CheckStuck();
         if (path.Count <= 0 || index == -1) return;

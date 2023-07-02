@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class Ui {
     public GameObject panel;
     public Text name;
+    public Text capacity;
     public Image icon;
 }
 
@@ -99,6 +100,7 @@ public class SelectController : MonoBehaviour {
         selectedBuilding = hit.transform.GetComponentInParent<BuildingObject>();
         ui.panel.SetActive(true);
         ui.name.text = selectedBuilding.Building.name;
+        ui.capacity.text = selectedBuilding.AssignedUnits.Count + "/" + selectedBuilding.Building.capacity;
         ui.icon.sprite = selectedBuilding.Building.icon;
 
         Transform selectedBuildingTransform = selectedBuilding.transform;

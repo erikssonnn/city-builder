@@ -16,6 +16,7 @@ MonoBehaviour:
   name: Hut
   icon: {fileID: 21300000, guid: d9c2ca272c26dec4ebd1f23ac47b7229, type: 3}
   buildingType: 0
+  capacity: 5
   size: {x: 4, y: 0, z: 4}
   prefab: {fileID: 7826425774087933323, guid: fc132c0678e33184b80109249fc58af6, type: 3}
   cost:
