@@ -2,22 +2,14 @@ using ScriptableObjects;
 using UnityEngine;
 using UnityEngine.UI;
 
-[System.Serializable]
-public struct ResourceUi {
-    public Text foodText, woodText, stoneText;
-    public Text foodCostText, woodCostText, stoneCostText;
-}
-
 public class ResourceController : MonoBehaviour {
-    [SerializeField] private ResourceUi resourceUi = new ResourceUi();
-
-    public int Food { get; private set; }
-
-    public int Wood { get; private set; }
-
-    public int Stone { get; private set; }
+    private int Food { get; set; }
+    private int Wood { get; set; }
+    private int Stone { get; set; }
+    private UiController ui = null;
 
     private void Start() {
+        ui = UiController.Instance;
         ChangeResource(new BuildingCost(20, 20, 20));
         DisplayResourceCost(new BuildingCost(0, 0, 0));
     }
@@ -31,6 +23,13 @@ public class ResourceController : MonoBehaviour {
         if (Wood < 0) Wood = 0;
         if (Stone < 0) Stone = 0;
 
+        if(cost.food < 0)
+            ShakeController.Instance.Shake(ui.foodAmountText.transform, 200.0f, 0.25f);
+        if(cost.wood < 0)
+            ShakeController.Instance.Shake(ui.woodAmountText.transform, 200.0f, 0.25f);
+        if(cost.stone < 0)
+            ShakeController.Instance.Shake(ui.stoneAmountText.transform, 200.0f, 0.25f);
+
         UpdateResourceUi();
     }
 
@@ -41,14 +40,14 @@ public class ResourceController : MonoBehaviour {
     }
 
     private void UpdateResourceUi() {
-        resourceUi.foodText.text = Food.ToString("F0");
-        resourceUi.woodText.text = Wood.ToString("F0");
-        resourceUi.stoneText.text = Stone.ToString("F0");
+        ui.foodAmountText.text = Food.ToString("F0");
+        ui.woodAmountText.text = Wood.ToString("F0");
+        ui.stoneAmountText.text = Stone.ToString("F0");
     }
 
     public void DisplayResourceCost(BuildingCost cost) {
-        resourceUi.foodCostText.text = cost.food == 0 ? "" : cost.food.ToString("F0");
-        resourceUi.woodCostText.text = cost.wood == 0 ? "" : cost.wood.ToString("F0");
-        resourceUi.stoneCostText.text = cost.stone == 0 ? "" : cost.stone.ToString("F0");
+        ui.foodCostText.text = cost.food == 0 ? "" : cost.food.ToString("F0");
+        ui.woodCostText.text = cost.wood == 0 ? "" : cost.wood.ToString("F0");
+        ui.stoneCostText.text = cost.stone == 0 ? "" : cost.stone.ToString("F0");
     }
 }

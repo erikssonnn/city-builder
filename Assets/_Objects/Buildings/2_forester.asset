@@ -15,7 +15,7 @@ MonoBehaviour:
   index: 2
   name: Forester
   icon: {fileID: 21300000, guid: 8d88bee862fc42a4bae6ab635302e5d8, type: 3}
-  buildingType: 0
+  occupation: {fileID: 11400000, guid: 4521b5b5ac1d0834ba4330a0a993319f, type: 2}
   capacity: 2
   size: {x: 9, y: 0, z: 9}
   prefab: {fileID: 5066516339969274573, guid: c07d29603fa8ac647aeb10db34a499dd, type: 3}

@@ -1,31 +1,26 @@
 using System.Collections.Generic;
+using System.Linq;
 using ScriptableObjects;
 using UnityEngine;
 
 public class BuildingObject : MonoBehaviour {
     [SerializeField] private Building building;
     public List<Vector3Int> Positions { get; } = new List<Vector3Int>();
-    public List<UnitController> AssignedUnits { get; } = new List<UnitController>();
 
     public Building Building {
         get => building;
         set => building = value;
     }
-    
+    private PopulationController populationController = null;
+
     private void Start() {
+        populationController = FindObjectOfType<PopulationController>();
+        if (populationController == null) {
+            throw new System.Exception("Cant find PopulationController instance!");
+        }
         if (building == null) {
             throw new System.Exception("Building is null!");
         }
-    }
-
-    public void AssignUnit(UnitController unit) {
-        if (AssignedUnits.Count + 1 > building.capacity) return;
-        AssignedUnits.Add(unit);
-    }
-
-    public void RemoveUnit() {
-        if (AssignedUnits.Count <= 0) return;
-        AssignedUnits.RemoveAt(0);
     }
 
     public List<Vector3Int> GetBuildingPositions(Vector3 pos, Quaternion rotation) {

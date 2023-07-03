@@ -1,27 +1,21 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
-using UnityEngine.UI;
-
-[System.Serializable]
-public class Ui {
-    public GameObject panel;
-    public Text name;
-    public Text capacity;
-    public Image icon;
-}
 
 public class SelectController : MonoBehaviour {
     [SerializeField] private LayerMask lm = 0;
     [FormerlySerializedAs("selectObject")] [SerializeField] private GameObject highlightObject = null;
-    [SerializeField] private Ui ui = new Ui();
 
     private Camera cam = null;
     private BuildingObject selectedBuilding = null;
     private BuildingController buildingController = null;
     private MapController mapController = null;
+    private PopulationController populationController = null;
+    private UiController ui = null;
 
     private void Start() {
+        ui = UiController.Instance;
         NullObjectCheck();
     }
 
@@ -29,23 +23,23 @@ public class SelectController : MonoBehaviour {
         if (lm == 0) {
             throw new System.Exception("Layermask is null!");
         }
-
         if (Camera.main != null) {
             cam = Camera.main;
         }
-
         if (highlightObject == null) {
             throw new System.Exception("Selector object is null!");
         }
-        
         buildingController = FindObjectOfType<BuildingController>();
         if (buildingController == null) {
             throw new System.Exception("Cant find BuildingController instance!");
         }
-        
         mapController = FindObjectOfType<MapController>();
         if (mapController == null) {
             throw new System.Exception("Cant find MapController instance!");
+        }
+        populationController = FindObjectOfType<PopulationController>();
+        if (populationController == null) {
+            throw new System.Exception("Cant find PopulationController instance!");
         }
     }
 
@@ -61,11 +55,12 @@ public class SelectController : MonoBehaviour {
             throw new System.Exception("Building has zero occupied positions!");
         }
         
-        foreach (Vector3Int pos in selectedBuilding.Positions) {
-            if (mapController.Map.Contains(pos)) {
-                mapController.Map.Remove(pos);
-            }
+        foreach (Vector3Int pos in selectedBuilding.Positions.Where(pos => mapController.Map.Contains(pos))) {
+            mapController.Map.Remove(pos);
         }
+        
+        populationController.ChangeCapacity(-selectedBuilding.Building.capacity);
+        
         Destroy(selectedBuilding.gameObject);
         DeSelect();
         selectedBuilding = null;
@@ -89,7 +84,7 @@ public class SelectController : MonoBehaviour {
     public void DeSelect() {
         highlightObject.SetActive(false);
         selectedBuilding = null;
-        ui.panel.SetActive(false);
+        ui.selectPanel.SetActive(false);
     }
 
     private void Select(RaycastHit hit) {
@@ -98,10 +93,9 @@ public class SelectController : MonoBehaviour {
         }
         
         selectedBuilding = hit.transform.GetComponentInParent<BuildingObject>();
-        ui.panel.SetActive(true);
-        ui.name.text = selectedBuilding.Building.name;
-        ui.capacity.text = selectedBuilding.AssignedUnits.Count + "/" + selectedBuilding.Building.capacity;
-        ui.icon.sprite = selectedBuilding.Building.icon;
+        ui.selectPanel.SetActive(true);
+        ui.selectedNameText.text = selectedBuilding.Building.name;
+        ui.selectImage.sprite = selectedBuilding.Building.icon;
 
         Transform selectedBuildingTransform = selectedBuilding.transform;
         highlightObject.transform.SetPositionAndRotation(selectedBuildingTransform.position, selectedBuildingTransform.rotation);

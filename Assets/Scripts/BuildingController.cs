@@ -20,6 +20,7 @@ public class BuildingController : MonoBehaviour {
     private List<Vector3Int> positions = new List<Vector3Int>();
     private ResourceController resourceController = null;
     private SelectController selectController = null;
+    private PopulationController populationController = null;
     private Building selectedBuilding = null;
 
     private void Start() {
@@ -41,6 +42,11 @@ public class BuildingController : MonoBehaviour {
         selectController = FindObjectOfType<SelectController>();
         if (selectController == null) {
             throw new System.Exception("Cant find SelectController instance!");
+        }
+        
+        populationController = FindObjectOfType<PopulationController>();
+        if (populationController == null) {
+            throw new System.Exception("Cant find PopulationController instance!");
         }
 
         if (Camera.main != null) {
@@ -94,6 +100,11 @@ public class BuildingController : MonoBehaviour {
         GameObject newObj = Instantiate(buildingObject.Building.prefab, placeholder.transform.position,
             placeholder.transform.rotation, buildingsParent);
 
+        Building b = buildingObject.Building;
+        if (b.capacity > 0) {
+            populationController.ChangeCapacity(b.capacity);
+        }
+        
         List<Vector3Int> temp = buildingObject.GetBuildingPositions(pos, rot);
         foreach (Vector3Int t in temp.Where(t => !mapController.Map.Contains(t))) {
             newObj.GetComponent<BuildingObject>().Positions.Add(t);
@@ -133,10 +144,11 @@ public class BuildingController : MonoBehaviour {
         Transform placeholderT = placeholder.transform;
 
         PlaceBuilding(buildingObject, placeholderT.position, placeholderT.rotation);
-
+        
         resourceController.ChangeResource(cost);
         PlacingBuilding = false;
         placeholder.SetActive(false);
+        selectedBuilding = null;
     }
 
     private void CancelPlacingBuilding() {
