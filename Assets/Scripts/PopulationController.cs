@@ -24,7 +24,7 @@ public class PopulationController : MonoBehaviour {
     [SerializeField] private Transform parentObj = null;
     [SerializeField] private List<Occupation> allOccupations = new List<Occupation>();
 
-    private readonly List<UnitController> allUnits = new List<UnitController>();
+    public List<UnitController> AllUnits { get; set; } = new List<UnitController>();
     private int capacity = 0;
     private Color defaultTextColor = Color.clear;
     private UiController ui = null;
@@ -62,8 +62,8 @@ public class PopulationController : MonoBehaviour {
     }
 
     private void UpdatePopulationText() {
-        ui.populationAmountText.text = allUnits.Count() + "/" + capacity;
-        if (allUnits.Count() > capacity) {
+        ui.populationAmountText.text = AllUnits.Count() + "/" + capacity;
+        if (AllUnits.Count() > capacity) {
             ui.populationAmountText.color = Color.red;
             return;
         }
@@ -83,16 +83,14 @@ public class PopulationController : MonoBehaviour {
         GameObject newUnit = Instantiate(unitPrefab, pos, Quaternion.identity, parentObj);
         UnitController unitObject = newUnit.GetComponent<UnitController>();
         unitObject.Occupation = allOccupations[0];
-        allUnits.Add(unitObject);
+        AllUnits.Add(unitObject);
         UpdatePopulationText();
         UpdateOccupationsUi();
     }
 
     public void IncreaseOccupation(int index) {
-        // TODO: INCREASE, DECREASE DOESNT WORK, FIX GETUNIT() PLEASE :(
-        
         if (GetPopulationTypesAmount().workers == 0) return;
-        UnitController unit = GetUnit(index);
+        UnitController unit = GetUnit(0);
         unit.Occupation = allOccupations[index];
         UpdateOccupationsUi();
     }
@@ -104,7 +102,7 @@ public class PopulationController : MonoBehaviour {
             if (GetPopulationTypesAmount().miners == 0) return;
         
         UnitController unit = GetUnit(index);
-        unit.Occupation = allOccupations[index];
+        unit.Occupation = allOccupations[0];
         UpdateOccupationsUi();
     }
 
@@ -124,7 +122,7 @@ public class PopulationController : MonoBehaviour {
     private PopulationType GetPopulationTypesAmount() {
         int workers = 0, lumbermen = 0, miners = 0;
         // ReSharper disable once ConvertIfStatementToSwitchStatement (if statement is cleaner)
-        foreach (UnitController unit in allUnits) {
+        foreach (UnitController unit in AllUnits) {
             if (unit.Occupation.index == 0)
                 workers++;
             if (unit.Occupation.index == 1)
@@ -137,7 +135,7 @@ public class PopulationController : MonoBehaviour {
     }
 
     private UnitController GetUnit(int index) {
-        foreach (UnitController t in allUnits.Where(t => t.Occupation.index == index)) {
+        foreach (UnitController t in AllUnits.Where(t => t.Occupation.index == index)) {
             return t;
         }
 

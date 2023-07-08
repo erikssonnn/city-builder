@@ -7,6 +7,16 @@ using UnityEngine.AI;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
+public class ColorClass {
+    public Color color;
+    [Range(0.0f, 1.0f)] public float rarity;
+
+    public ColorClass(Color color, float rarity) {
+        this.color = color;
+        this.rarity = rarity;
+    }
+}
+
 public class UnitController : MonoBehaviour {
     [SerializeField] private float speed = 0.0f;
     [SerializeField] private float rotSpeed = 0.0f;
@@ -62,8 +72,7 @@ public class UnitController : MonoBehaviour {
             }
         }
         //
-
-        CheckStuck();
+        
         if (path.Count <= 0 || index == -1) return;
 
         Vector3 lookPos = path[index] - t.position;
@@ -142,12 +151,5 @@ public class UnitController : MonoBehaviour {
 
         newMaterials[1].color = Random.ColorHSV();
         ren.materials = newMaterials;
-    }
-
-    private void CheckStuck() {
-        if (path.Count <= 0 || index == -1) return;
-        velMag = agent.velocity.magnitude;
-        if (agent.velocity.magnitude > 0.1f) return;
-        CreatePath(GetRandomPos());
     }
 }
