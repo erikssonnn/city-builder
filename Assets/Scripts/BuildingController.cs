@@ -29,11 +29,7 @@ public class BuildingController : MonoBehaviour {
     }
 
     private void NullObjectCheck() {
-        mapController = FindObjectOfType<MapController>();
-        if (mapController == null) {
-            throw new System.Exception("Cant find MapController instance!");
-        }
-
+        mapController = MapController.Instance;
         resourceController = FindObjectOfType<ResourceController>();
         if (resourceController == null) {
             throw new System.Exception("Cant find ResourceController instance!");

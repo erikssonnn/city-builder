@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using ScriptableObjects;
 using UnityEngine;
+using ScriptableObjects;
 using Random = UnityEngine.Random;
 
 public class PopulationType {
@@ -34,10 +34,6 @@ public class PopulationController : MonoBehaviour {
         defaultTextColor = ui.populationAmountText.color;
         NullObjectCheck();
         PlaceStartUnits();
-    }
-
-    public List<Occupation> GetAllOccupations() {
-        return allOccupations;
     }
 
     private void NullObjectCheck() {

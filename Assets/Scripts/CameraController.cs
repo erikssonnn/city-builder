@@ -13,7 +13,7 @@ public class CameraController : MonoBehaviour {
     
     private void Start() {
         t = transform;
-        mapController = FindObjectOfType<MapController>();
+        mapController = MapController.Instance;
         if (mapController == null) {
             throw new System.Exception("MapController is null!");
         }

@@ -31,15 +31,14 @@ public class ShakeController : MonoBehaviour {
     }
 
     private IEnumerator ShakeCoroutine(Transform t, float amount, float length) {
-        print("SHAKE");
         float time = 0.0f;
 
         float step = Time.deltaTime * (amount * 2.0f);
         float rotStep = Time.deltaTime * (amount * shakeRotationTangent);
 
         while (time < length) {
-            float up = UnityEngine.Random.Range(-1.0f, 1.0f) * (amount * 0.1f);
-            float right = UnityEngine.Random.Range(-1.0f, 1.0f) * (amount * 0.1f);
+            float up = Random.Range(-1.0f, 1.0f) * (amount * 0.1f);
+            float right = Random.Range(-1.0f, 1.0f) * (amount * 0.1f);
 
             desiredPos = new Vector3(right, up, 0);
 

@@ -1,27 +1,66 @@
 using ScriptableObjects;
 using UnityEngine;
-using UnityEngine.UI;
+
+public class ResourceWrapper {
+    public float amount;
+    public float increment;
+
+    public ResourceWrapper(float amount, float increment) {
+        this.amount = amount;
+        this.increment = increment;
+    }
+}
 
 public class ResourceController : MonoBehaviour {
-    private int Food { get; set; }
-    private int Wood { get; set; }
-    private int Stone { get; set; }
-    private UiController ui = null;
+    [SerializeField] private float incrementThreshold = 0.0f;
+    [SerializeField] private Resource[] resources  = null;
 
+    private UiController ui = null;
+    private float incrementTimer = 0.0f;
+    
+    public Resource[] Resources {
+        get => resources;
+        set => resources = value;
+    }
+
+    public int[] ResourcesOnMap { private get; set; } = new int[3];
+
+    private ResourceWrapper Food { get; set; }
+    private ResourceWrapper Wood { get; set; }
+    private ResourceWrapper Stone { get; set; }
+    public static ResourceController Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    
     private void Start() {
         ui = UiController.Instance;
-        ChangeResource(new BuildingCost(20, 20, 20));
+        InitializeResources();
         DisplayResourceCost(new BuildingCost(0, 0, 0));
     }
 
-    public void ChangeResource(BuildingCost cost) {
-        Food += cost.food;
-        Wood += cost.wood;
-        Stone += cost.stone;
+    private void InitializeResources() {
+        Food = new ResourceWrapper(100, 0.0f);
+        Wood = new ResourceWrapper(100, 0.0f);
+        Stone = new ResourceWrapper(100, 0.0f);
+        UpdateResourceUi();
+    }
 
-        if (Food < 0) Food = 0;
-        if (Wood < 0) Wood = 0;
-        if (Stone < 0) Stone = 0;
+    public void ChangeResource(BuildingCost cost) {
+        Food.amount += cost.food;
+        Wood.amount += cost.wood;
+        Stone.amount += cost.stone;
+
+        if (Food.amount < 0) Food.amount = 0;
+        if (Wood.amount < 0) Wood.amount = 0;
+        if (Stone.amount < 0) Stone.amount = 0;
 
         if(cost.food < 0)
             ShakeController.Instance.Shake(ui.foodAmountText.transform, 200.0f, 0.25f);
@@ -33,21 +72,56 @@ public class ResourceController : MonoBehaviour {
         UpdateResourceUi();
     }
 
+    private void LateUpdate() {
+        incrementTimer += Time.deltaTime;
+        while (incrementTimer > incrementThreshold) {
+            //Food.increment = ResourcesOnMap[0] * resources[0].increment;
+            Wood.increment = ResourcesOnMap[1] * resources[0].increment;
+            Stone.increment = ResourcesOnMap[2] * resources[1].increment;
+            //fix later, now there is no 0 = food. since there is no food node on the map
+            
+            ChangeResource(new BuildingCost(Food.increment, Wood.increment, Stone.increment));
+            incrementTimer = 0.0f;
+        }
+    }
+
     public bool EnoughResources(BuildingCost cost) {
-        return Mathf.Abs(cost.food) <= Food &&
-               Mathf.Abs(cost.wood) <= Wood &&
-               Mathf.Abs(cost.stone) <= Stone;
+        return Mathf.Abs(cost.food) <= Food.amount &&
+               Mathf.Abs(cost.wood) <= Wood.amount &&
+               Mathf.Abs(cost.stone) <= Stone.amount;
     }
 
     private void UpdateResourceUi() {
-        ui.foodAmountText.text = Food.ToString("F0");
-        ui.woodAmountText.text = Wood.ToString("F0");
-        ui.stoneAmountText.text = Stone.ToString("F0");
+        ui.foodAmountText.text = Food.amount.ToString("F0");
+        ui.woodAmountText.text = Wood.amount.ToString("F0");
+        ui.stoneAmountText.text = Stone.amount.ToString("F0");
     }
 
     public void DisplayResourceCost(BuildingCost cost) {
-        ui.foodCostText.text = cost.food == 0 ? "" : cost.food.ToString("F0");
-        ui.woodCostText.text = cost.wood == 0 ? "" : cost.wood.ToString("F0");
-        ui.stoneCostText.text = cost.stone == 0 ? "" : cost.stone.ToString("F0");
+        ui.foodAdditionalText.text = cost.food == 0 ? "" : "<color=red>" + cost.food.ToString("F0") + "</color>";
+        ui.woodAdditionalText.text = cost.wood == 0 ? "" : "<color=red>" + cost.wood.ToString("F0") + "</color>";
+        ui.stoneAdditionalText.text = cost.stone == 0 ? "" : "<color=red>" + cost.stone.ToString("F0") + "</color>";
+    }
+
+    public void DisplayResourceIncrement(int index) {
+        switch (index) {
+            case -1:
+                ui.foodAdditionalText.text = "";
+                ui.woodAdditionalText.text = "";
+                ui.stoneAdditionalText.text = "";
+                break;
+            case 0:
+                string foodColor = Food.increment >= 0.0f ? "<color=green>+" : "<color=red>";
+                ui.foodAdditionalText.text = foodColor + Food.increment.ToString("F3") + "</color>";
+                break;
+            case 1:
+                string woodColor = Food.increment >= 0.0f ? "<color=green>+" : "<color=red>";
+                ui.woodAdditionalText.text = woodColor + Wood.increment.ToString("F3") + "</color>";
+                break;
+            case 2:
+                string stoneColor = Food.increment >= 0.0f ? "<color=green>+" : "<color=red>";
+                ui.stoneAdditionalText.text = stoneColor + Stone.increment.ToString("F3") + "</color>";
+                break;
+        }
     }
 }

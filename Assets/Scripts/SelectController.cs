@@ -20,6 +20,7 @@ public class SelectController : MonoBehaviour {
     }
 
     private void NullObjectCheck() {
+        mapController = MapController.Instance;
         if (lm == 0) {
             throw new System.Exception("Layermask is null!");
         }
@@ -32,10 +33,6 @@ public class SelectController : MonoBehaviour {
         buildingController = FindObjectOfType<BuildingController>();
         if (buildingController == null) {
             throw new System.Exception("Cant find BuildingController instance!");
-        }
-        mapController = FindObjectOfType<MapController>();
-        if (mapController == null) {
-            throw new System.Exception("Cant find MapController instance!");
         }
         populationController = FindObjectOfType<PopulationController>();
         if (populationController == null) {

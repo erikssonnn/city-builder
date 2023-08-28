@@ -23,3 +23,4 @@ MonoBehaviour:
     food: 0
     wood: -15
     stone: -15
+  resourcePoint: 000100

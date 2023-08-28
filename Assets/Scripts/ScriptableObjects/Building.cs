@@ -4,11 +4,11 @@ using UnityEngine.Serialization;
 namespace ScriptableObjects {
     [System.Serializable] 
     public class BuildingCost {
-        public int food;
-        public int wood;
-        public int stone;
+        public float food;
+        public float wood;
+        public float stone;
 
-        public BuildingCost (int food, int wood, int stone) {
+        public BuildingCost (float food, float wood, float stone) {
             this.food = food;
             this.wood = wood;
             this.stone = stone;
@@ -21,10 +21,10 @@ namespace ScriptableObjects {
         public int index;
         public new string name;
         public Sprite icon;
-        public Occupation occupation;
         public int capacity;
         [FormerlySerializedAs("buildingSize")] public Vector3Int size;
         [FormerlySerializedAs("buildingPrefab")] public GameObject prefab;
         public BuildingCost cost;
+        public bool[] resourcePoint;
     }
 }

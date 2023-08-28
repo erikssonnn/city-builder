@@ -9,9 +9,11 @@ public class UiController : MonoBehaviour {
     public Text foodAmountText;
     public Text woodAmountText;
     public Text stoneAmountText;
-    public Text foodCostText;
-    public Text woodCostText;
-    public Text stoneCostText;
+    
+    [FormerlySerializedAs("foodCostText")] public Text foodAdditionalText;
+    [FormerlySerializedAs("woodCostText")] public Text woodAdditionalText;
+    [FormerlySerializedAs("stoneCostText")] public Text stoneAdditionalText;
+
     public Text populationAmountText;
     public Text selectedNameText;
     public Text workerAmountText;

@@ -7,16 +7,6 @@ using UnityEngine.AI;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 
-public class ColorClass {
-    public Color color;
-    [Range(0.0f, 1.0f)] public float rarity;
-
-    public ColorClass(Color color, float rarity) {
-        this.color = color;
-        this.rarity = rarity;
-    }
-}
-
 public class UnitController : MonoBehaviour {
     [SerializeField] private float speed = 0.0f;
     [SerializeField] private float rotSpeed = 0.0f;
@@ -24,16 +14,15 @@ public class UnitController : MonoBehaviour {
 
     private NavMeshAgent agent = null;
     private int index = -1;
-    private float velMag = 0;
     private readonly Dictionary<int, Vector3> path = new Dictionary<int, Vector3>();
     private bool isCreatingPath = false;
     private Camera cam = null;
     private Transform t = null;
     private MapController mapController = null;
     private const float downScale = 0.1f;
-
+    
     public Occupation Occupation { get; set; } = null;
-
+    
     private void OnDrawGizmos() {
         if (path.Count <= 0 || index == -1) return;
         Gizmos.color = Color.magenta;
@@ -48,7 +37,7 @@ public class UnitController : MonoBehaviour {
 
     private void Start() {
         t = transform;
-        mapController = FindObjectOfType<MapController>();
+        mapController = MapController.Instance;
         if (mapController == null) {
             throw new System.Exception("Could not find MapController");
         }
@@ -63,7 +52,7 @@ public class UnitController : MonoBehaviour {
         StartCoroutine(CreatePath(GetRandomPos()));
     }
 
-    private void Update() {
+    private void LateUpdate() {
         // TODO: debug, remove
         if (Input.GetKeyDown((KeyCode.O))) {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
@@ -104,7 +93,6 @@ public class UnitController : MonoBehaviour {
 
         return ret;
     }
-
 
     private IEnumerator CreatePath(Vector3 targetPos) {
         if (isCreatingPath) {
