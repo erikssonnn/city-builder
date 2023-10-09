@@ -25,9 +25,9 @@ public class ResourceController : MonoBehaviour {
 
     public int[] ResourcesOnMap { private get; set; } = new int[3];
 
-    private ResourceWrapper Food { get; set; }
-    private ResourceWrapper Wood { get; set; }
-    private ResourceWrapper Stone { get; set; }
+    public ResourceWrapper Food { get; set; }
+    public ResourceWrapper Wood { get; set; }
+    public ResourceWrapper Stone { get; set; }
     public static ResourceController Instance { get; private set; }
 
     private void Awake() {
@@ -75,10 +75,10 @@ public class ResourceController : MonoBehaviour {
     private void LateUpdate() {
         incrementTimer += Time.deltaTime;
         while (incrementTimer > incrementThreshold) {
-            //Food.increment = ResourcesOnMap[0] * resources[0].increment;
-            Wood.increment = ResourcesOnMap[1] * resources[0].increment;
-            Stone.increment = ResourcesOnMap[2] * resources[1].increment;
-            //fix later, now there is no 0 = food. since there is no food node on the map
+            Food.increment = PopulationController.Instance.GetPopulationTypesAmount().farmers * (ResourcesOnMap[0] * resources[0].increment) -
+                             PopulationController.Instance.AllUnits.Count * 0.15f;
+            Wood.increment = PopulationController.Instance.GetPopulationTypesAmount().lumbermen * (ResourcesOnMap[1] * resources[1].increment);
+            Stone.increment = PopulationController.Instance.GetPopulationTypesAmount().miners * (ResourcesOnMap[2] * resources[2].increment);
             
             ChangeResource(new BuildingCost(Food.increment, Wood.increment, Stone.increment));
             incrementTimer = 0.0f;

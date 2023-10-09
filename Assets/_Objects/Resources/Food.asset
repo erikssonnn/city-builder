@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2e07fe1eb35edec459b1205965886b17, type: 3}
-  m_Name: Stone
+  m_Name: Food
   m_EditorClassIdentifier: 
-  index: 2
-  name: Stone
-  prefab: {fileID: 1413586944226612652, guid: 3e05598f95b833940aeb184f460dbd13, type: 3}
+  index: 0
+  name: Food
+  prefab: {fileID: 901066721855331636, guid: 950afa62e74b02b4ab3a0b4a315719d3, type: 3}
   increment: 0.01
-  size: {x: 4, y: 0, z: 4}
-  rarity: 0.2
+  size: {x: 3, y: 0, z: 3}
+  rarity: 0.3
   randomRot: 1

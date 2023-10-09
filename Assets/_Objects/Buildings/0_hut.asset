@@ -15,11 +15,11 @@ MonoBehaviour:
   index: 0
   name: Hut
   icon: {fileID: 21300000, guid: d9c2ca272c26dec4ebd1f23ac47b7229, type: 3}
-  occupation: {fileID: 11400000, guid: 4521b5b5ac1d0834ba4330a0a993319f, type: 2}
   capacity: 5
   size: {x: 4, y: 0, z: 4}
   prefab: {fileID: 7826425774087933323, guid: fc132c0678e33184b80109249fc58af6, type: 3}
   cost:
     food: 0
-    wood: -2
-    stone: -5
+    wood: -20
+    stone: -50
+  resourcePoint: 

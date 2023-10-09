@@ -83,13 +83,13 @@ public class UnitController : MonoBehaviour {
     }
 
     private Vector3 GetRandomPos() {
-        Vector2 size = mapController.MapSize;
+        int size = mapController.CitySize;
 
         Vector3 randomPos = Random.insideUnitCircle * 10f;
         Vector3 ret = transform.position + new Vector3(randomPos.x, 0f, randomPos.y);
 
-        ret.x = Mathf.Clamp(ret.x, -size.x, size.x);
-        ret.z = Mathf.Clamp(ret.z, -size.y, size.y);
+        ret.x = Mathf.Clamp(ret.x, -size, size);
+        ret.z = Mathf.Clamp(ret.z, -size, size);
 
         return ret;
     }

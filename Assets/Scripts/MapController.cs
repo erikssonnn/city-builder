@@ -11,8 +11,8 @@ public class MapController : MonoBehaviour {
     [Header("DEBUG: ")] [SerializeField] private bool drawGizmos = false;
 
     private int[] resourcePoints = new int[3];
-
-    public List<Vector3Int> Map { get; set; } = new List<Vector3Int>();
+    public int CitySize { get; set; } = 10;
+    public List<Vector3Int> Map { get; } = new List<Vector3Int>();
     public static MapController Instance { get; private set; }
 
     private void Awake() {
@@ -34,17 +34,23 @@ public class MapController : MonoBehaviour {
         if (!drawGizmos) return;
         if (Map == null) return;
 
+        // buildings
         Gizmos.color = Color.magenta;
         foreach (Vector3 center in Map.Select(position =>
                      new Vector3(position.x + 0.5f, 0.0f, position.z + 0.5f))) {
             Gizmos.DrawCube(center, Vector3.one);
         }
 
+        // Map edge
         Gizmos.color = Color.red;
         Gizmos.DrawCube(new Vector3(-MapSize.x, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, MapSize.y * 2.0f));
         Gizmos.DrawCube(new Vector3(MapSize.x, 0.0f, 0.0f), new Vector3(1.0f, 1.0f, MapSize.y * 2.0f));
         Gizmos.DrawCube(new Vector3(0.0f, 0.0f, -MapSize.y), new Vector3(MapSize.x * 2.0f, 1.0f, 1.0f));
         Gizmos.DrawCube(new Vector3(0.0f, 0.0f, MapSize.y), new Vector3(MapSize.x * 2.0f, 1.0f, 1.0f));
+        
+        // City size
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawCube(Vector3.zero, new Vector3(CitySize, 1.0f, CitySize));
     }
 
     private void Start() {
@@ -80,7 +86,6 @@ public class MapController : MonoBehaviour {
         }
 
         ResourceController.Instance.ResourcesOnMap = resourcePoints;
-        print(resourcePoints[1]);
     }
 
     private bool CanPlace(List<Vector3Int> positions) {

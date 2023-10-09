@@ -15,12 +15,11 @@ MonoBehaviour:
   index: 3
   name: Firepit
   icon: {fileID: 21300000, guid: d4ea1b3465b5228498a6a9920e1f5f70, type: 3}
-  occupation: {fileID: 11400000, guid: 4521b5b5ac1d0834ba4330a0a993319f, type: 2}
   capacity: 0
   size: {x: 4, y: 0, z: 4}
   prefab: {fileID: 7159377156150646154, guid: e530422038d36034d89327f205613e07, type: 3}
   cost:
     food: 0
-    wood: -4
+    wood: -40
     stone: 0
   resourcePoint: 010101

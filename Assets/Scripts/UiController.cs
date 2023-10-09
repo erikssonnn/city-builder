@@ -17,6 +17,7 @@ public class UiController : MonoBehaviour {
     public Text populationAmountText;
     public Text selectedNameText;
     public Text workerAmountText;
+    public Text farmerAmountText;
     public Text lumbermanAmountText;
     public Text minerAmountText;
 
@@ -25,8 +26,10 @@ public class UiController : MonoBehaviour {
     public GameObject occupationPanel;
 
     [Header("BUTTONS: ")] 
+    public Button increaseFarmers;
     public Button increaseLumbermen;
     public Button increaseMiners;
+    public Button decreaseFarmers;
     public Button decreaseLumbermen;
     public Button decreaseMiners;
 

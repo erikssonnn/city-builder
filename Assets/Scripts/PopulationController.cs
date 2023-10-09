@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -6,19 +7,22 @@ using Random = UnityEngine.Random;
 
 public class PopulationType {
     public int workers;
+    public int farmers;
     public int lumbermen;
     public int miners;
 
-    public PopulationType(int workers, int lumbermen, int miners) {
+    public PopulationType(int workers, int farmers, int lumbermen, int miners) {
         this.workers = workers;
+        this.farmers = farmers;
         this.lumbermen = lumbermen;
         this.miners = miners;
     }
 }
 
 public class PopulationController : MonoBehaviour {
-    [Header("POPULATION: ")] [SerializeField]
-    private int startPopulation = 0;
+    [Header("POPULATION: ")]
+    [SerializeField] private int startPopulation = 0;
+    [SerializeField] private int populationIncreaseCheckThreshold = 0;
 
     [SerializeField] private GameObject unitPrefab = null;
     [SerializeField] private Transform parentObj = null;
@@ -28,7 +32,20 @@ public class PopulationController : MonoBehaviour {
     private int capacity = 0;
     private Color defaultTextColor = Color.clear;
     private UiController ui = null;
+    private float populationIncreaseCheckTimer = 0.0f;
 
+    public static PopulationController Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    
     private void Start() {
         ui = UiController.Instance;
         defaultTextColor = ui.populationAmountText.color;
@@ -50,9 +67,26 @@ public class PopulationController : MonoBehaviour {
         }
     }
 
+    private void LateUpdate() {
+        populationIncreaseCheckTimer += Time.deltaTime;
+        
+        while (populationIncreaseCheckTimer > populationIncreaseCheckThreshold) {
+            if (AllUnits.Count() < capacity && ResourceController.Instance.Food.amount > 0) {
+                if (Random.value > 0.25f) {
+                    int citySize = MapController.Instance.CitySize;
+                    Vector3Int randomPos = new Vector3Int(Random.Range(-citySize, citySize), 0, Random.Range(-citySize, citySize));
+                    CreateUnit(randomPos);
+                }
+            }
+            
+            populationIncreaseCheckTimer = 0.0f;
+        }
+    }
+
     private void PlaceStartUnits() {
         for (int i = 0; i < startPopulation; i++) {
-            Vector3Int randomPos = new Vector3Int(Random.Range(-10, 10), 0, Random.Range(-10, 10));
+            int citySize = MapController.Instance.CitySize;
+            Vector3Int randomPos = new Vector3Int(Random.Range(-citySize, citySize), 0, Random.Range(-citySize, citySize));
             CreateUnit(randomPos);
         }
     }
@@ -82,6 +116,7 @@ public class PopulationController : MonoBehaviour {
         AllUnits.Add(unitObject);
         UpdatePopulationText();
         UpdateOccupationsUi();
+        MapController.Instance.CitySize = 10 + AllUnits.Count;
     }
 
     public void IncreaseOccupation(int index) {
@@ -93,8 +128,10 @@ public class PopulationController : MonoBehaviour {
     
     public void DecreaseOccupation(int index) {
         if(index == 1)
-            if (GetPopulationTypesAmount().lumbermen == 0) return;
+            if (GetPopulationTypesAmount().farmers == 0) return;
         if(index == 2)
+            if (GetPopulationTypesAmount().lumbermen == 0) return;
+        if(index == 3)
             if (GetPopulationTypesAmount().miners == 0) return;
         
         UnitController unit = GetUnit(index);
@@ -106,28 +143,33 @@ public class PopulationController : MonoBehaviour {
         PopulationType populationType = GetPopulationTypesAmount();
 
         ui.workerAmountText.text = populationType.workers.ToString();
+        ui.farmerAmountText.text = populationType.farmers.ToString();
         ui.lumbermanAmountText.text = populationType.lumbermen.ToString();
         ui.minerAmountText.text = populationType.miners.ToString();
 
+        ui.decreaseFarmers.interactable = populationType.farmers > 0;
         ui.decreaseLumbermen.interactable = populationType.lumbermen > 0;
         ui.decreaseMiners.interactable = populationType.miners > 0;
+        ui.increaseFarmers.interactable = populationType.workers > 0;
         ui.increaseLumbermen.interactable = populationType.workers > 0;
         ui.increaseMiners.interactable = populationType.workers > 0;
     }
 
-    private PopulationType GetPopulationTypesAmount() {
-        int workers = 0, lumbermen = 0, miners = 0;
+    public PopulationType GetPopulationTypesAmount() {
+        int workers = 0, farmers = 0, lumbermen = 0, miners = 0;
         // ReSharper disable once ConvertIfStatementToSwitchStatement (if statement is cleaner)
         foreach (UnitController unit in AllUnits) {
             if (unit.Occupation.index == 0)
                 workers++;
             if (unit.Occupation.index == 1)
-                lumbermen++;
+                farmers++;
             if (unit.Occupation.index == 2)
+                lumbermen++;
+            if (unit.Occupation.index == 3)
                 miners++;
         }
 
-        return new PopulationType(workers, lumbermen, miners);
+        return new PopulationType(workers, farmers, lumbermen, miners);
     }
 
     private UnitController GetUnit(int index) {
