@@ -23,6 +23,10 @@ public class DebugController : MonoBehaviour {
     }
 
     private void Update() {
+        if (Input.GetKeyDown(KeyCode.I)) {
+            populationController.IncreasePopulation();
+        }
+
         if (!Input.GetKeyDown(KeyCode.P)) return;
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 

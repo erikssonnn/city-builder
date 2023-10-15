@@ -21,9 +21,12 @@ public class UiController : MonoBehaviour {
     public Text lumbermanAmountText;
     public Text minerAmountText;
 
+    public Text messageFeedText;
+    
     [Header("PANELS: ")] 
     public GameObject selectPanel;
     public GameObject occupationPanel;
+    public GameObject messagePanel;
 
     [Header("BUTTONS: ")] 
     public Button increaseFarmers;
@@ -36,10 +39,11 @@ public class UiController : MonoBehaviour {
     [Header("IMAGES: ")] 
     public Image selectImage;
     public Image plusImage;
+    public Image messagePlusImage;
 
     [Header("SPRITES: ")] 
-    [SerializeField] private Sprite plusSprite = null;
-    [SerializeField] private Sprite minusSprite = null;
+    public Sprite plusSprite = null;
+    public Sprite minusSprite = null;
 
     public static UiController Instance { get; private set; }
 
@@ -55,6 +59,7 @@ public class UiController : MonoBehaviour {
         DontDestroyOnLoad(gameObject);
     }
 
+    // This should be moved to corresponding script, not in the uiController
     public void ToggleExtraMenu() {
         workPanelOnOff = !workPanelOnOff;
         plusImage.sprite = workPanelOnOff ? minusSprite : plusSprite;

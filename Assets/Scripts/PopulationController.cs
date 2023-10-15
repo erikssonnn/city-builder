@@ -68,19 +68,28 @@ public class PopulationController : MonoBehaviour {
     }
 
     private void LateUpdate() {
+        IncreasePopulationChecker();
+    }
+
+    private void IncreasePopulationChecker() {
         populationIncreaseCheckTimer += Time.deltaTime;
         
         while (populationIncreaseCheckTimer > populationIncreaseCheckThreshold) {
             if (AllUnits.Count() < capacity && ResourceController.Instance.Food.amount > 0) {
                 if (Random.value > 0.25f) {
-                    int citySize = MapController.Instance.CitySize;
-                    Vector3Int randomPos = new Vector3Int(Random.Range(-citySize, citySize), 0, Random.Range(-citySize, citySize));
-                    CreateUnit(randomPos);
+                    IncreasePopulation();
                 }
             }
             
             populationIncreaseCheckTimer = 0.0f;
         }
+    }
+
+    public void IncreasePopulation() {
+        int citySize = MapController.Instance.CitySize;
+        Vector3Int randomPos = new Vector3Int(Random.Range(-citySize, citySize), 0, Random.Range(-citySize, citySize));
+        CreateUnit(randomPos);
+        MessageController.Instance.CreateMessage("Population increased!");
     }
 
     private void PlaceStartUnits() {
