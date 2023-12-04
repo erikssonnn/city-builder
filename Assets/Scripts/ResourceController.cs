@@ -81,6 +81,10 @@ public class ResourceController : MonoBehaviour {
             Stone.increment = PopulationController.Instance.GetPopulationTypesAmount().miners * (ResourcesOnMap[2] * resources[2].increment);
             
             ChangeResource(new BuildingCost(Food.increment, Wood.increment, Stone.increment));
+            if (Food.amount <= 0.0f) {
+                MessageController.Instance.CreateMessage("Your citizens are starving!");
+                // Fix a starving behaviour here please
+            }
             incrementTimer = 0.0f;
         }
     }

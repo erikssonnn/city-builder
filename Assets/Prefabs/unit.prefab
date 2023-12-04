@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4735c43c0d3e14346b9b97d03d34f588, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
+  speed: 50
   rotSpeed: 2
   lm:
     serializedVersion: 2
@@ -60,7 +60,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.75
-  m_Speed: 4
+  m_Speed: 50
   m_Acceleration: 32
   avoidancePriority: 99
   m_AngularSpeed: 120

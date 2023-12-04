@@ -11,6 +11,10 @@ public class MapController : MonoBehaviour {
     [Header("DEBUG: ")] [SerializeField] private bool drawGizmos = false;
 
     private int[] resourcePoints = new int[3];
+    /*
+     * TODO: remove the resources depending on how much resource increase you have on each resource. (after time)
+     */
+    // private List<GameObject> resourceGameObjectsOnMap = new List<GameObject>();
     public int CitySize { get; set; } = 10;
     public List<Vector3Int> Map { get; } = new List<Vector3Int>();
     public static MapController Instance { get; private set; }
@@ -93,10 +97,6 @@ public class MapController : MonoBehaviour {
         return !IntersectsMapPos(positions);
     }
 
-    public int GetResourceAmountOnMap(int index) {
-        return resourcePoints[index];
-    }
-
     private void SpawnResource(Resource res) {
         Vector3Int randomPos = GetRandomPos();
         if (Map.Contains(randomPos)) {
@@ -122,6 +122,7 @@ public class MapController : MonoBehaviour {
             return;
         }
 
+        // resourceGameObjectsOnMap.Add(newObj);
         List<Vector3Int> resourcePointPositions = new List<Vector3Int>();
 
         foreach (Vector3Int t in positions.Where(t => !Map.Contains(t))) {

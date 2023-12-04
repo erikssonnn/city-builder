@@ -69,7 +69,7 @@ public class UnitController : MonoBehaviour {
         Quaternion rot = Quaternion.LookRotation(lookPos);
         t.rotation = Quaternion.Slerp(t.rotation, rot, Time.fixedDeltaTime * rotSpeed);
 
-        t.Translate(t.TransformDirection(Vector3.forward) * (speed * downScale * Time.fixedDeltaTime), Space.World);
+        t.Translate(t.TransformDirection(Vector3.forward) * (speed * downScale * Time.deltaTime), Space.World);
 
         float dist = Vector3.Distance(t.position, path[index]);
         if (dist > 0.5f) return;

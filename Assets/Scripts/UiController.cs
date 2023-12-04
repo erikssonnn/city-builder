@@ -35,15 +35,19 @@ public class UiController : MonoBehaviour {
     public Button decreaseFarmers;
     public Button decreaseLumbermen;
     public Button decreaseMiners;
-
+    
     [Header("IMAGES: ")] 
     public Image selectImage;
     public Image plusImage;
     public Image messagePlusImage;
+    public Image pauseImage;
 
     [Header("SPRITES: ")] 
     public Sprite plusSprite = null;
     public Sprite minusSprite = null;
+    
+    public Sprite pauseSprite = null;
+    public Sprite playSprite = null;
 
     public static UiController Instance { get; private set; }
 
