@@ -16,29 +16,15 @@ public class UiController : MonoBehaviour {
 
     public Text populationAmountText;
     public Text selectedNameText;
-    public Text workerAmountText;
-    public Text farmerAmountText;
-    public Text lumbermanAmountText;
-    public Text minerAmountText;
 
     public Text messageFeedText;
     
     [Header("PANELS: ")] 
     public GameObject selectPanel;
-    public GameObject occupationPanel;
     public GameObject messagePanel;
 
-    [Header("BUTTONS: ")] 
-    public Button increaseFarmers;
-    public Button increaseLumbermen;
-    public Button increaseMiners;
-    public Button decreaseFarmers;
-    public Button decreaseLumbermen;
-    public Button decreaseMiners;
-    
     [Header("IMAGES: ")] 
     public Image selectImage;
-    public Image plusImage;
     public Image messagePlusImage;
     public Image pauseImage;
 
@@ -50,9 +36,7 @@ public class UiController : MonoBehaviour {
     public Sprite playSprite = null;
 
     public static UiController Instance { get; private set; }
-
-    private bool workPanelOnOff = false;
-
+    
     private void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
@@ -61,12 +45,5 @@ public class UiController : MonoBehaviour {
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
-    }
-
-    // This should be moved to corresponding script, not in the uiController
-    public void ToggleExtraMenu() {
-        workPanelOnOff = !workPanelOnOff;
-        plusImage.sprite = workPanelOnOff ? minusSprite : plusSprite;
-        occupationPanel.SetActive(workPanelOnOff);
     }
 }

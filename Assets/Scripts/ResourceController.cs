@@ -75,10 +75,9 @@ public class ResourceController : MonoBehaviour {
     private void LateUpdate() {
         incrementTimer += Time.deltaTime;
         while (incrementTimer > incrementThreshold) {
-            Food.increment = PopulationController.Instance.GetPopulationTypesAmount().farmers * (ResourcesOnMap[0] * resources[0].increment) -
-                             PopulationController.Instance.AllUnits.Count * 0.15f;
-            Wood.increment = PopulationController.Instance.GetPopulationTypesAmount().lumbermen * (ResourcesOnMap[1] * resources[1].increment);
-            Stone.increment = PopulationController.Instance.GetPopulationTypesAmount().miners * (ResourcesOnMap[2] * resources[2].increment);
+            Food.increment = 10 * (ResourcesOnMap[0] * resources[0].increment);
+            Wood.increment = 10 * (ResourcesOnMap[1] * resources[1].increment);
+            Stone.increment = 10 * (ResourcesOnMap[2] * resources[2].increment);
             
             ChangeResource(new BuildingCost(Food.increment, Wood.increment, Stone.increment));
             if (Food.amount <= 0.0f) {

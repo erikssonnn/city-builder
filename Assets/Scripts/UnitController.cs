@@ -21,8 +21,6 @@ public class UnitController : MonoBehaviour {
     private MapController mapController = null;
     private const float downScale = 0.1f;
     
-    public Occupation Occupation { get; set; } = null;
-    
     private void OnDrawGizmos() {
         if (path.Count <= 0 || index == -1) return;
         Gizmos.color = Color.magenta;
