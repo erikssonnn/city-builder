@@ -1,4 +1,4 @@
-Shader "custom/crt" {
+Shader "Hidden/crt" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
     }

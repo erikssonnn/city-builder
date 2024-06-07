@@ -1,8 +1,8 @@
 using UnityEngine;
+using Logger = erikssonn.Logger;
 
 [ExecuteInEditMode, ImageEffectAllowedInSceneView]
 public class CRT : MonoBehaviour {
-    public Material material;
 
     public int screenJumpFrequency = 1;
     public float screenJumpLength = 0.2f;
@@ -25,10 +25,10 @@ public class CRT : MonoBehaviour {
 
     public bool isMultipleGhost = true;
     public float multipleGhostStrength = 0.01f;
-
     public bool isMonochrome = false;
-
     public bool isLowResolution = true;
+    
+    private Material material;
 
     #region Shader properties
     private int _MonochormeOnOff;
@@ -66,6 +66,10 @@ public class CRT : MonoBehaviour {
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination) {
+        if (material == null) {
+            material = new Material(Shader.Find("Hidden/crt"));
+        }
+        
         material.SetInt(_MonochormeOnOff, isMonochrome ? 1 : 0);
         material.SetFloat(_FlickeringStrength, flickeringStrength);
         material.SetFloat(_FlickeringCycle, flickeringCycle);
