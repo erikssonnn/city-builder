@@ -1,14 +1,17 @@
-using UnityEngine.UI;
+using System;
+using DG.Tweening;
 using UnityEngine;
+using Logger = erikssonn.Logger;
 
 public class MessageController : MonoBehaviour {
-    [SerializeField] private float fadeOutThreshold = 5.0f;
+    [SerializeField] private RectTransform fadeoutObject = null;
 
     public static MessageController Instance { get; private set; }
 
-    private float fadeOutTimer = 0.0f;
-    private bool manuallyOpened = false;
+    private bool open = false;
     private UiController ui = null;
+    private Sequence tweenSequence = null;
+    private float offscreenValue= 0.0f;
 
     private void Awake() {
         if (Instance != null && Instance != this) {
@@ -21,30 +24,46 @@ public class MessageController : MonoBehaviour {
     }
 
     private void Start() {
+        offscreenValue = -Screen.width;
         ui = UiController.Instance;
         ui.messagePanel.SetActive(false);
-        manuallyOpened = false;
-        fadeOutTimer = fadeOutThreshold;
-    }
-
-    public void CreateMessage(string message) {
-        fadeOutTimer = 0.0f;
-        ui.messageFeedText.text = message + "\n" + ui.messageFeedText.text;
-    }
-
-    public void ToggleMessagePanel() {
-        manuallyOpened = !manuallyOpened;
-        ui.messagePanel.SetActive(manuallyOpened);
-        ui.messagePlusImage.sprite = manuallyOpened ? ui.minusSprite : ui.plusSprite;
+        fadeoutObject.anchoredPosition = new Vector2(offscreenValue, fadeoutObject.anchoredPosition.y);
+        open = false;
     }
 
     private void Update() {
-        fadeOutTimer += Time.deltaTime;
-
-        if (manuallyOpened) {
-            return;
+        if (Input.GetKeyDown(KeyCode.H)) {
+            CreateMessage("TEST MESSAGE, VERY LONG, SENATUS POPULUSQUE ROMANUS");
         }
+    }
 
-        ui.messagePanel.SetActive(!(fadeOutTimer > fadeOutThreshold));
+    public void CreateMessage(string message) {
+        string str = message + "\n" + ui.messageFeedText.text;
+        ui.messageFeedText.text = str;
+        ui.popupText.text = str;
+        if (open) { return; }
+        ShowPopup();
+    }
+
+    public void ToggleMessagePanel() {
+        open = !open;
+        HidePopup();
+        ui.messagePanel.SetActive(open);
+        ui.messagePlusImage.sprite = open ? ui.minusSprite : ui.plusSprite;
+    }
+
+    private void ShowPopup() {
+        tweenSequence.Kill();
+        fadeoutObject.anchoredPosition = new Vector2(offscreenValue, fadeoutObject.anchoredPosition.y);
+        tweenSequence = DOTween.Sequence();
+        tweenSequence.Append(fadeoutObject.DOAnchorPosX(ui.messageButtonRectTransform.anchoredPosition.x, 0.8f));
+        tweenSequence.AppendInterval(2.0f);
+        tweenSequence.Append(fadeoutObject.DOAnchorPosX(offscreenValue, 0.8f));
+        tweenSequence.Play();
+    }
+
+    private void HidePopup() {
+        tweenSequence.Kill();
+        fadeoutObject.anchoredPosition = new Vector2(offscreenValue, fadeoutObject.anchoredPosition.y);
     }
 }

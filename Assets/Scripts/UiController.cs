@@ -16,8 +16,6 @@ public class UiController : MonoBehaviour {
 
     public Text populationAmountText;
     public Text selectedNameText;
-
-    public Text messageFeedText;
     
     [Header("PANELS: ")] 
     public GameObject selectPanel;
@@ -34,6 +32,11 @@ public class UiController : MonoBehaviour {
     
     public Sprite pauseSprite = null;
     public Sprite playSprite = null;
+    
+    [Header("MessagePanel")]
+    public RectTransform messageButtonRectTransform = null;
+    public Text popupText;
+    public Text messageFeedText;
 
     public static UiController Instance { get; private set; }
     

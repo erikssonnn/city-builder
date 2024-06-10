@@ -35,6 +35,7 @@ public class PopulationController : MonoBehaviour {
     private UiController ui = null;
     private float populationIncreaseCheckTimer = 0.0f;
     private MapController mapController = null;
+    private const float speedDownscale = 0.1f;
 
     private void Start() {
         ui = UiController.Instance;
@@ -132,7 +133,7 @@ public class PopulationController : MonoBehaviour {
             
             float3 direction = math.normalize(unitPos - unit.destination);
             float distance = math.distance(unit.destination, unitPos);
-            float3 newPosition = unitPos - direction * Time.deltaTime * speed;
+            float3 newPosition = unitPos - direction * Time.fixedDeltaTime * speed * speedDownscale;
             float3 maskedPosition = math.select(unitPos, newPosition, distance > 0.5f);
 
             unit.gameObject.transform.position = maskedPosition;
