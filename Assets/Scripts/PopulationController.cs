@@ -4,18 +4,6 @@ using Unity.Burst;
 using UnityEngine;
 using Logger = erikssonn.Logger;
 using Random = UnityEngine.Random;
-using Unity.Mathematics;
-
-[BurstCompile]
-public class Unit {
-    public readonly GameObject gameObject;
-    public float3 destination;
-    
-    public Unit(GameObject gameObject, float3 destination) {
-        this.gameObject = gameObject;
-        this.destination = destination;
-    }
-}
 
 [BurstCompile]
 public class PopulationController : MonoBehaviour {
@@ -25,21 +13,15 @@ public class PopulationController : MonoBehaviour {
 
     [SerializeField] private GameObject unitPrefab = null;
     [SerializeField] private Transform parentObj = null;
-    
-    [Header("UNITS: ")]
-    [SerializeField] private float speed = 0.0f;
 
-    private readonly Dictionary<Hash128, Unit> units = new Dictionary<Hash128, Unit>();
+    private readonly Dictionary<Hash128, UnitController> units = new Dictionary<Hash128, UnitController>();
     private int capacity = 0;
     private Color defaultTextColor = Color.clear;
     private UiController ui = null;
     private float populationIncreaseCheckTimer = 0.0f;
-    private MapController mapController = null;
-    private const float speedDownscale = 0.1f;
 
     private void Start() {
         ui = UiController.Instance;
-        mapController = MapController.Instance;
         defaultTextColor = ui.populationAmountText.color;
         NullObjectCheck();
         PlaceStartUnits();
@@ -112,58 +94,8 @@ public class PopulationController : MonoBehaviour {
 
     public void CreateUnit(Vector3 pos) {
         GameObject newUnit = Instantiate(unitPrefab, pos, Quaternion.identity, parentObj);
-        Unit unit = new Unit(newUnit, GetRandomPos());
-        units.Add(Hash128.Compute(units.Count), unit);
+        units.Add(Hash128.Compute(units.Count), newUnit.GetComponent<UnitController>());
         UpdatePopulationText();
         MapController.Instance.CitySize = 10 + units.Count;
-        RandomizeClothes(unit);
     }
-
-    #region SeparatedUnitController
-    private void Update() {
-        if (units.Count == 0) { return; }
-
-        foreach (KeyValuePair<Hash128, Unit> entry in units) {
-            Unit unit = entry.Value;
-            if (math.distance(unit.gameObject.transform.position, unit.destination) <= 0.5f) {
-                unit.destination = GetRandomPos();
-            }
-
-            float3 unitPos = unit.gameObject.transform.position;
-            
-            float3 direction = math.normalize(unitPos - unit.destination);
-            float distance = math.distance(unit.destination, unitPos);
-            float3 newPosition = unitPos - direction * Time.fixedDeltaTime * speed * speedDownscale;
-            float3 maskedPosition = math.select(unitPos, newPosition, distance > 0.5f);
-
-            unit.gameObject.transform.position = maskedPosition;
-        }
-    }
-
-    private Vector3 GetRandomPos() {
-        int size = mapController.CitySize;
-
-        Vector3 randomPos = Random.insideUnitCircle * 10f;
-        Vector3 ret = transform.position + new Vector3(randomPos.x, 0f, randomPos.y);
-
-        ret.x = Mathf.Clamp(ret.x, -size, size);
-        ret.z = Mathf.Clamp(ret.z, -size, size);
-
-        return ret;
-    }
-
-    private void RandomizeClothes(Unit unit) {
-        MeshRenderer ren = unit.gameObject.GetComponentInChildren<MeshRenderer>();
-        Material[] materials = ren.sharedMaterials;
-        Material[] newMaterials = new Material[materials.Length];
-
-        for (int i = 0; i < materials.Length; i++) {
-            newMaterials[i] = new Material(materials[i]);
-        }
-
-        newMaterials[1].color = Random.ColorHSV();
-        ren.materials = newMaterials;
-    }
-
-    #endregion
 }

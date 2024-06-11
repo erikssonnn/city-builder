@@ -809,11 +809,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d0428d17f1f6ae49921e4203bb5be10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPopulation: 5
+  startPopulation: 50
   populationIncreaseCheckThreshold: 1
   unitPrefab: {fileID: 2146490876269610490, guid: 8f45b7df674a1df469b332a665b59e49, type: 3}
   parentObj: {fileID: 1913526829}
-  speed: 15
 --- !u!114 &264055148
 MonoBehaviour:
   m_ObjectHideFlags: 0

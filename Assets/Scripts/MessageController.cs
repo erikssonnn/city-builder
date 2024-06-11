@@ -31,12 +31,6 @@ public class MessageController : MonoBehaviour {
         open = false;
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.H)) {
-            CreateMessage("TEST MESSAGE, VERY LONG, SENATUS POPULUSQUE ROMANUS");
-        }
-    }
-
     public void CreateMessage(string message) {
         string str = message + "\n" + ui.messageFeedText.text;
         ui.messageFeedText.text = str;
