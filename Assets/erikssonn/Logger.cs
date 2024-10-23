@@ -25,6 +25,7 @@ namespace erikssonn {
                     break;
                 case LogLevel.FATAL:
                     Debug.LogException(new Exception(message));
+                    Debug.Break();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(logLevel), logLevel, prefix + "default enum throw");

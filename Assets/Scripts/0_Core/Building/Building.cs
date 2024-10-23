@@ -22,10 +22,7 @@ namespace _0_Core.Building {
             _placement = BuildingPlacement.VALID;
             
             GameObject gameObject = Object.Instantiate(Resources.Load($"Prefabs/Buildings/{_data.Name}")) as GameObject;
-            if (gameObject == null) {
-                Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL);
-                Debug.Break();
-            }
+            if (gameObject == null) { Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL); }
             _transform = gameObject.transform;
 
             _materials = new List<Material>();
