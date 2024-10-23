@@ -5,23 +5,16 @@ public class CameraController : MonoBehaviour {
     [SerializeField] private float scrollPanSpeed = 0.0f;
     [SerializeField] private float scrollSpeed = 0.0f;
 
-    private MapController mapController = null;
     private Camera cam = null;
     private const float downScale = 0.1f;
-    private Transform t = null;
     private Vector2Int mapLimit = Vector2Int.zero;
     
     private void Start() {
-        t = transform;
-        mapController = MapController.Instance;
-        if (mapController == null) {
-            throw new System.Exception("MapController is null!");
-        }
         cam = Camera.main;
         if (cam == null) {
             throw new System.Exception("Cant find main camera!");
         }
-        mapLimit = new Vector2Int(mapController.MapSize.x, mapController.MapSize.y);
+        mapLimit = new Vector2Int(100, 100);
     }
 
     private void Update() {
@@ -49,7 +42,7 @@ public class CameraController : MonoBehaviour {
             (scrollPanSpeed * Time.fixedDeltaTime * cam.orthographicSize * downScale);
         pos.x = Mathf.Clamp(pos.x, -mapLimit.x, mapLimit.x);
         pos.z = Mathf.Clamp(pos.z, -mapLimit.y, mapLimit.y);
-        t.position = pos;
+        transform.position = pos;
     }
 
     private void Movement() {
@@ -59,6 +52,6 @@ public class CameraController : MonoBehaviour {
             new Vector3(x, 0, y) * (panSpeed * Time.fixedDeltaTime * cam.orthographicSize * downScale);
         pos.x = Mathf.Clamp(pos.x, -mapLimit.x, mapLimit.x);
         pos.z = Mathf.Clamp(pos.z, -mapLimit.y, mapLimit.y);
-        t.position = pos;
+        transform.position = pos;
     }
 }
