@@ -3,7 +3,7 @@ using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
 
-namespace _0_Core.Buildings {
+namespace _0_Core.Building {
     public enum BuildingPlacement {
         VALID,
         FIXED
@@ -16,7 +16,7 @@ namespace _0_Core.Buildings {
         private BuildingPlacement _placement;
         private List<Material> _materials;
 
-        public Building(BuildingData data) {
+        private Building(BuildingData data) {
             _data = data;
             _currentHealth = data.Health;
             _placement = BuildingPlacement.VALID;

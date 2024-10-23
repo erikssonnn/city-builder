@@ -4,13 +4,8 @@ using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
 
-namespace _0_Core {
+namespace _0_Core.Map {
     public class Map {
-        public enum Tile {
-            TERRAIN,
-            BUILDING
-        }
-        
         private static Dictionary<Vector2Int, Tile> MAP = new Dictionary<Vector2Int, Tile>();
         public bool IsFree(Vector2Int position) => MAP.All(val => val.Key != position);
 

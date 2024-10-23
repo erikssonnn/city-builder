@@ -1,4 +1,4 @@
-namespace _0_Core.Buildings {
+namespace _0_Core.Building {
 	public class BuildingData {
 		public BuildingData(string name, int health) {
 			Name = name;

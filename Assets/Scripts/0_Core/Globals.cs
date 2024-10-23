@@ -1,4 +1,4 @@
-using _0_Core.Buildings;
+using _0_Core.Building;
 
 namespace _0_Core {
 	public abstract class Globals {
