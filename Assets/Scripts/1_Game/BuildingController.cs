@@ -47,6 +47,7 @@ namespace _1_Game {
 
         public void PlaceBuilding() {
             if (_currentBuilding == null || _currentBuilding.HasValidPlacement == false) { return; }
+            Map.SetTile(new Vector2Int(_currentBuilding.Position.x, _currentBuilding.Position.z), new Tile(TileType.BUILDING, _currentBuilding));
             _currentBuilding.Place();
             _currentBuilding = null;
         }
@@ -57,7 +58,6 @@ namespace _1_Game {
             }
 
             Building building = new Building(Globals.BUILDING_DATA[buildingIndex]);
-            Logger.Print($"START PLACING BUILDING {building.Name}");
             _currentBuilding = building;
         }
 

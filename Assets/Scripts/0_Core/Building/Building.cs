@@ -13,6 +13,7 @@ namespace _0_Core.Building {
     public class Building {
         private BuildingData _data;
         private Transform _transform;
+        private Vector3Int _position;
         private int _currentHealth;
         private BuildingPlacement _placement;
         private List<Material> _materials;
@@ -25,6 +26,7 @@ namespace _0_Core.Building {
             GameObject gameObject = Object.Instantiate(Resources.Load($"Prefabs/Buildings/{_data.Name}")) as GameObject;
             if (gameObject == null) { Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL); }
             _transform = gameObject.transform;
+            _transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
 
             _materials = new List<Material>();
             foreach (Material material in _transform.GetComponent<MeshRenderer>().materials) {
@@ -32,7 +34,8 @@ namespace _0_Core.Building {
             }
         }
 
-        public void SetPosition(Vector3 position) {
+        public void SetPosition(Vector3Int position) {
+            _position = position;
             _transform.position = position;
         }
 
@@ -66,6 +69,7 @@ namespace _0_Core.Building {
         }
 
         public void Place() {
+            _transform.localScale = new Vector3(1f, 1f, 1f);
             _placement = BuildingPlacement.FIXED;
             _transform.GetComponent<BoxCollider>().isTrigger = false;
             SetMaterial();
@@ -82,6 +86,7 @@ namespace _0_Core.Building {
         public bool IsFixed => _placement == BuildingPlacement.FIXED;
         public string Name => _data.Name;
         public Transform Transform => _transform;
+        public Vector3Int Position => _position;
         public int Health {
             get => _currentHealth;
             set => _currentHealth = value;
