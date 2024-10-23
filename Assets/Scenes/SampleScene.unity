@@ -2596,12 +2596,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2e809ba5413290488eb85eea3f6ff51, type: 3}
+  m_Script: {fileID: 11500000, guid: c2a40a782ff21044f8af95ebfe823c55, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panSpeed: 12
-  scrollPanSpeed: 15
-  scrollSpeed: 1000
+  panSpeed: 0
+  scrollPanSpeed: 0
+  scrollSpeed: 0
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

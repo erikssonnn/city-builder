@@ -16,7 +16,7 @@ namespace _0_Core.Building {
         private BuildingPlacement _placement;
         private List<Material> _materials;
 
-        private Building(BuildingData data) {
+        public Building(BuildingData data) {
             _data = data;
             _currentHealth = data.Health;
             _placement = BuildingPlacement.VALID;
@@ -26,7 +26,7 @@ namespace _0_Core.Building {
             _transform = gameObject.transform;
 
             _materials = new List<Material>();
-            foreach (Material material in _transform.Find("Mesh").GetComponent<Renderer>().materials) {
+            foreach (Material material in _transform.GetComponent<MeshRenderer>().materials) {
                 _materials.Add(new Material(material));
             }
         }
