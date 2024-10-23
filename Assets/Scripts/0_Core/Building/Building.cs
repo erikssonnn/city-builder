@@ -35,6 +35,10 @@ namespace _0_Core.Building {
             _transform.position = position;
         }
 
+        public void SetMaterial(Material material) {
+            _transform.GetComponent<MeshRenderer>().material = material;
+        }
+
         public void Place() {
             _placement = BuildingPlacement.FIXED;
             _transform.GetComponent<BoxCollider>().isTrigger = false;

@@ -1,11 +1,8 @@
-namespace _0_Core.Building {
-	public class BuildingData {
-		public BuildingData(string name, int health) {
-			Name = name;
-			Health = health;
-		}
+using System;
+using _0_Core.Entity;
 
-		public string Name { get; }
-		public int Health { get; }
+namespace _0_Core.Building {
+	public class BuildingData : EntityData{
+		public BuildingData(Guid id, string name, int health) : base(id, name, health) { }
 	}
 }
