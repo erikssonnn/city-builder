@@ -5,7 +5,7 @@ namespace _0_Core.Input {
         public KeyCode KeyCode;
         public int MouseButton;
 
-        public InputKey(KeyCode keyCode = default, int mouseButton = -1) {
+        public InputKey(KeyCode keyCode, int mouseButton = -1) {
             KeyCode = keyCode;
             MouseButton = mouseButton;
         }

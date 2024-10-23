@@ -13,14 +13,13 @@ namespace _1_Game {
     public class BuildingController : MonoBehaviour {
         private static BuildingController _instance;
         private Building _currentBuilding;
-        private Material _validMaterial;
-        private Material _invalidMaterial;
 
         public static BuildingController Instance {
             get {
                 if (_instance == null) {
                     Logger.Print("BuildingController is NULL", LogLevel.FATAL);
                 }
+
                 return _instance;
             }
         }
@@ -32,9 +31,6 @@ namespace _1_Game {
                 _instance = this;
                 DontDestroyOnLoad(this.gameObject);
             }
-
-            _validMaterial = Resources.Load( $"Materials/valid") as Material;
-            _invalidMaterial = Resources.Load( $"Materials/invalid") as Material;
         }
 
         private void Update() {
@@ -44,14 +40,19 @@ namespace _1_Game {
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
                 Vector3Int pos = new Vector3Int(Mathf.FloorToInt(hit.point.x), 0, Mathf.FloorToInt(hit.point.z));
                 _currentBuilding.SetPosition(pos);
-                _currentBuilding.SetMaterial(Map.IsFree(new Vector2Int(pos.x, pos.z)) 
-                    ? _validMaterial
-                    : _invalidMaterial);
+                _currentBuilding.CheckValidPlacement(pos);
+                _currentBuilding.SetMaterial();
             }
         }
 
+        public void PlaceBuilding() {
+            if (_currentBuilding == null || _currentBuilding.HasValidPlacement == false) { return; }
+            _currentBuilding.Place();
+            _currentBuilding = null;
+        }
+
         public void StartPlacingBuilding(int buildingIndex) {
-            if (_currentBuilding != null) {
+            if (_currentBuilding != null && !_currentBuilding.IsFixed) {
                 Destroy(_currentBuilding.Transform.gameObject);
             }
 
@@ -61,7 +62,10 @@ namespace _1_Game {
         }
 
         public void CancelPlacingBuilding() {
-            if (_currentBuilding == null) { return; }
+            if (_currentBuilding == null) {
+                return;
+            }
+
             Destroy(_currentBuilding.Transform.gameObject);
             _currentBuilding = null;
         }

@@ -6,6 +6,7 @@ using Logger = erikssonn.Logger;
 namespace _0_Core.Building {
     public enum BuildingPlacement {
         VALID,
+        INVALID,
         FIXED
     }
     
@@ -35,13 +36,46 @@ namespace _0_Core.Building {
             _transform.position = position;
         }
 
-        public void SetMaterial(Material material) {
-            _transform.GetComponent<MeshRenderer>().material = material;
+        public void SetMaterial() {
+            List<Material> materials;
+            switch (_placement) {
+                case BuildingPlacement.VALID: {
+                    Material refMaterial = Resources.Load($"Materials/valid") as Material;
+                    materials = new List<Material>();
+                    for (int i = 0; i < _materials.Count; i++)
+                    {
+                        materials.Add(refMaterial);
+                    }
+                    break;
+                }
+                case BuildingPlacement.INVALID: {
+                    Material refMaterial = Resources.Load($"Materials/invalid") as Material;
+                    materials = new List<Material>();
+                    for (int i = 0; i < _materials.Count; i++)
+                    {
+                        materials.Add(refMaterial);
+                    }
+                    break;
+                }
+                case BuildingPlacement.FIXED:
+                default:
+                    materials = _materials;
+                    break;
+            }
+            _transform.GetComponent<MeshRenderer>().materials = materials.ToArray();
         }
 
         public void Place() {
             _placement = BuildingPlacement.FIXED;
             _transform.GetComponent<BoxCollider>().isTrigger = false;
+            SetMaterial();
+        }
+
+        public void CheckValidPlacement(Vector3Int position) {
+            if (_placement == BuildingPlacement.FIXED) { return; }
+            _placement = Map.Map.IsFree(new Vector2Int(position.x, position.z))
+                ? BuildingPlacement.VALID
+                : BuildingPlacement.INVALID;
         }
 
         public bool HasValidPlacement => _placement == BuildingPlacement.VALID;
