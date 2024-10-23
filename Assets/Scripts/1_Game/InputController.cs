@@ -31,11 +31,11 @@ namespace _1_Game {
         
         private void Update() {
             // BUILDING 1
-            if (Input.GetKeyDown(InputMapper.BUILDING_1)) {
+            if (Input.GetKeyDown(InputMapper.BUILDING_1.KeyCode)) {
                 BuildingController.Instance.StartPlacingBuilding(0);
             }
             // CANCEL BUILDING
-            if (Input.GetKeyDown(InputMapper.CANCEL_BUILDING)) {
+            if (Input.GetKeyDown(InputMapper.CANCEL_BUILDING.KeyCode) || Input.GetMouseButtonDown(InputMapper.CANCEL_BUILDING.MouseButton)) {
                 BuildingController.Instance.CancelPlacingBuilding();
             }
         }
