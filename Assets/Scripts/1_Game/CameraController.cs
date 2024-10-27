@@ -32,7 +32,7 @@ namespace _1_Game {
             float size = cam.orthographicSize;
             float scroll = Input.GetAxisRaw("Mouse ScrollWheel");
             size -= scroll * scrollSpeed * Time.fixedDeltaTime;
-            size = Mathf.Clamp(size, 15, 40);
+            size = Mathf.Clamp(size, 2, 25);
             cam.orthographicSize = size;
         }
 

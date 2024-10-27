@@ -17,5 +17,15 @@ namespace _0_Core.Map {
             }
             MAP.Add(position, tile);
         }
+
+        public static void SetTile(Vector2Int[] positions, Tile tile) {
+            foreach (Vector2Int position in positions) {
+                if (!IsFree(position)) {
+                    Logger.Print("Cant set tile, it is taken!", LogLevel.WARNING);
+                    return;
+                }
+                MAP.Add(position, tile);
+            }
+        }
     }
 }

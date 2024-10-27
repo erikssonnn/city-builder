@@ -9,54 +9,83 @@ namespace _0_Core.Building {
         INVALID,
         FIXED
     }
-    
+
     public class Building {
         private BuildingData _data;
         private Transform _transform;
-        private Vector3Int _position;
-        private int _currentHealth;
+        private Vector2Int[] _grid;
+        private int _size;
         private BuildingPlacement _placement;
+        
         private List<Material> _materials;
+        private Material _validMaterial;
+        private Material _invalidMaterial;
 
         public Building(BuildingData data) {
             _data = data;
-            _currentHealth = data.Health;
             _placement = BuildingPlacement.VALID;
-            
+            _size = data.Size;
+            _grid = new Vector2Int[(_size * 2 + 1) * (_size * 2 + 1)];
+
             GameObject gameObject = Object.Instantiate(Resources.Load($"Prefabs/Buildings/{_data.Name}")) as GameObject;
-            if (gameObject == null) { Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL); }
+            if (gameObject == null) {
+                Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL);
+            }
+
             _transform = gameObject.transform;
             _transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
 
+            // Materials
             _materials = new List<Material>();
-            foreach (Material material in _transform.GetComponent<MeshRenderer>().materials) {
+            foreach (Material material in _transform.Find("mesh").GetComponent<MeshRenderer>().materials) {
                 _materials.Add(new Material(material));
             }
+
+            _validMaterial = Resources.Load($"Materials/valid") as Material;
+            _invalidMaterial = Resources.Load($"Materials/invalid") as Material;
         }
 
-        public void SetPosition(Vector3Int position) {
-            _position = position;
-            _transform.position = position;
+        public void CheckValidPlacement() {
+            foreach (Vector2Int pos in _grid) {
+                if (!Map.Map.IsFree(pos)) {
+                    _placement = BuildingPlacement.INVALID;
+                    break;
+                }
+                _placement = BuildingPlacement.VALID;
+            }
+        }
+        
+        public void Place() {
+            _transform.localScale = new Vector3(1f, 1f, 1f);
+            _placement = BuildingPlacement.FIXED;
+            SetMaterial();
+        }
+        
+#region Set & Get
+        public void SetPosition(Vector2Int position) {
+            _transform.position = new Vector3(position.x, 0, position.y);
+        }
+
+        public void SetGrid(Vector2Int[] grid) {
+            for (int i = 0; i < grid.Length; i++) {
+                _grid[i] = grid[i];
+            }
         }
 
         public void SetMaterial() {
             List<Material> materials;
             switch (_placement) {
                 case BuildingPlacement.VALID: {
-                    Material refMaterial = Resources.Load($"Materials/valid") as Material;
                     materials = new List<Material>();
-                    for (int i = 0; i < _materials.Count; i++)
-                    {
-                        materials.Add(refMaterial);
+                    for (int i = 0; i < _materials.Count; i++) {
+                        materials.Add(_validMaterial);
                     }
                     break;
                 }
                 case BuildingPlacement.INVALID: {
-                    Material refMaterial = Resources.Load($"Materials/invalid") as Material;
                     materials = new List<Material>();
-                    for (int i = 0; i < _materials.Count; i++)
-                    {
-                        materials.Add(refMaterial);
+                    for (int i = 0; i < _materials.Count; i++) {
+                        materials.Add(_invalidMaterial);
                     }
                     break;
                 }
@@ -65,44 +94,15 @@ namespace _0_Core.Building {
                     materials = _materials;
                     break;
             }
-            _transform.GetComponent<MeshRenderer>().materials = materials.ToArray();
-        }
 
-        public void Place() {
-            _transform.localScale = new Vector3(1f, 1f, 1f);
-            _placement = BuildingPlacement.FIXED;
-            _transform.GetComponent<BoxCollider>().isTrigger = false;
-            SetMaterial();
-        }
-
-        public void CheckValidPlacement(Vector3Int position) {
-            if (_placement == BuildingPlacement.FIXED) { return; }
-            _placement = Map.Map.IsFree(new Vector2Int(position.x, position.z))
-                ? BuildingPlacement.VALID
-                : BuildingPlacement.INVALID;
+            _transform.Find("mesh").GetComponent<MeshRenderer>().materials = materials.ToArray();
         }
 
         public bool HasValidPlacement => _placement == BuildingPlacement.VALID;
-        public bool IsFixed => _placement == BuildingPlacement.FIXED;
-        public string Name => _data.Name;
         public Transform Transform => _transform;
-        public Vector3Int Position => _position;
-        public int Health {
-            get => _currentHealth;
-            set => _currentHealth = value;
-        }
-        public int MaxHealth => _data.Health;
-
-        public int BuildingIndex {
-            get {
-                for (int i = 0; i < Globals.BUILDING_DATA.Length; i++) {
-                    if (Globals.BUILDING_DATA[i].Name == _data.Name) {
-                        return i;
-                    }
-                }
-
-                return -1;
-            }
-        }
+        public Vector2Int[] Grid => _grid;
+        public bool IsFixed => _placement == BuildingPlacement.FIXED;
+        public int Size => _size;
+#endregion
     }
 }
