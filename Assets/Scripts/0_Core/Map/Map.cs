@@ -31,7 +31,7 @@ namespace _0_Core.Map {
         }
         
         public static bool IsFree(Vector2Int position) => _map.All(val => val.Key != position);
-        public static int Size => _map.Count;
+        public static int Size => 64;
         public static Dictionary<Vector2Int, Tile> GetMap() => _map;
     }
 }
