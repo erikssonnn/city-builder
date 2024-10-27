@@ -48,7 +48,7 @@ namespace _0_Core.Building {
 
         public void CheckValidPlacement() {
             foreach (Vector2Int pos in _grid) {
-                if (!Map.Map.IsFree(pos)) {
+                if (!Map.Map.IsFree(pos) || !Map.Map.IsInsideMap(pos)) {
                     _placement = BuildingPlacement.INVALID;
                     break;
                 }

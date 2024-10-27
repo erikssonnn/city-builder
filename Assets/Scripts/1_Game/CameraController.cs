@@ -1,3 +1,4 @@
+using _0_Core.Map;
 using UnityEngine;
 
 namespace _1_Game {
@@ -15,7 +16,7 @@ namespace _1_Game {
             if (cam == null) {
                 throw new System.Exception("Cant find main camera!");
             }
-            mapLimit = new Vector2Int(100, 100);
+            mapLimit = new Vector2Int(Map.Size / 2, Map.Size / 2);
         }
 
         private void Update() {

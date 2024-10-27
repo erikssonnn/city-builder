@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using _0_Core.Map;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
-using Random = UnityEngine.Random;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _1_Game {
@@ -17,9 +15,11 @@ namespace _1_Game {
         private void OnValidate() {
             if (Map.Size % 2 != 0) {
                 Logger.Print("Invalid map size, reverted to 64", LogLevel.WARNING);
-                size = Mathf.RoundToInt(64 / 2.0f);
+                size = 64;
             }
-            size = Mathf.RoundToInt(Map.Size / 2.0f);
+
+            // here we dont half it since we start building the grid at 0 and not -size
+            size = Map.Size;
         }
 
         private void OnDrawGizmos() {
