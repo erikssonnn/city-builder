@@ -34,6 +34,10 @@ namespace _1_Game {
             if (Input.GetKeyDown(InputMapper.BUILDING_1.KeyCode)) {
                 BuildingController.Instance.StartPlacingBuilding(0);
             }
+            // BUILDING 1
+            if (Input.GetKeyDown(InputMapper.BUILDING_2.KeyCode)) {
+                BuildingController.Instance.StartPlacingBuilding(1);
+            }
             // CANCEL BUILDING
             if (Input.GetKeyDown(InputMapper.CANCEL_BUILDING.KeyCode) || Input.GetMouseButtonDown(InputMapper.CANCEL_BUILDING.MouseButton)) {
                 BuildingController.Instance.CancelPlacingBuilding();
