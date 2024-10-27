@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
+using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _0_Core.Building {
     public enum BuildingPlacement {

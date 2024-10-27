@@ -1,21 +1,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using erikssonn;
-using UnityEngine;
 using Logger = erikssonn.Logger;
+using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _0_Core.Map {
     public static class Map {
-        private static Dictionary<Vector2Int, Tile> MAP = new Dictionary<Vector2Int, Tile>();
-        public static bool IsFree(Vector2Int position) => MAP.All(val => val.Key != position);
-        public static int Size => MAP.Count;
-        public static Dictionary<Vector2Int, Tile> GetMap() => MAP;
+        private static Dictionary<Vector2Int, Tile> _map = new Dictionary<Vector2Int, Tile>();
+
+        public static void Clear() {
+            _map.Clear();
+        }
+        
         public static void SetTile(Vector2Int position, Tile tile) {
             if (!IsFree(position)) {
                 Logger.Print("Cant set tile, it is taken!", LogLevel.WARNING);
                 return;
             }
-            MAP.Add(position, tile);
+            _map.Add(position, tile);
         }
 
         public static void SetTile(Vector2Int[] positions, Tile tile) {
@@ -24,8 +26,12 @@ namespace _0_Core.Map {
                     Logger.Print("Cant set tile, it is taken!", LogLevel.WARNING);
                     return;
                 }
-                MAP.Add(position, tile);
+                _map.Add(position, tile);
             }
         }
+        
+        public static bool IsFree(Vector2Int position) => _map.All(val => val.Key != position);
+        public static int Size => _map.Count;
+        public static Dictionary<Vector2Int, Tile> GetMap() => _map;
     }
 }

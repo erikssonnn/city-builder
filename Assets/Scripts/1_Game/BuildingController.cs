@@ -1,11 +1,10 @@
-using System;
-using System.Collections.Generic;
 using _0_Core;
 using _0_Core.Building;
 using _0_Core.Map;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
+using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _1_Game {
     /// <summary>
@@ -23,7 +22,7 @@ namespace _1_Game {
 
             foreach (Vector2Int pos in _currentBuilding.Grid) {
                 Gizmos.color = Color.magenta;
-                Gizmos.DrawCube(new Vector3(pos.x, 0, pos.y),  new Vector3(1f, 0.1f, 1f));
+                Gizmos.DrawCube(new Vector3(pos.x, 0, pos.y), new Vector3(1f, 0.1f, 1f));
             }
         }
 
@@ -47,6 +46,8 @@ namespace _1_Game {
 
             _cam = Camera.main;
         }
+
+        private void OnDestroy() => Map.Clear();
 
         private void Update() {
             if (_currentBuilding == null) {

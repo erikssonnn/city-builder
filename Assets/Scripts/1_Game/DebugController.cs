@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _0_Core.Map;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _1_Game {
     /// <summary>
