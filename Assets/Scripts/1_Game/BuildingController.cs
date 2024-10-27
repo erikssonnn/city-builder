@@ -64,6 +64,13 @@ namespace _1_Game {
             }
         }
 
+        public void RotateBuilding() {
+            if (_currentBuilding == null || _currentBuilding.IsFixed) {
+                return;
+            }
+            _currentBuilding.Rotate();
+        }
+
         public void PlaceBuilding() {
             if (_currentBuilding == null || _currentBuilding.HasValidPlacement == false) {
                 return;

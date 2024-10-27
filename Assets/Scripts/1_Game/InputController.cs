@@ -8,7 +8,6 @@ namespace _1_Game {
     /// Checks for player input every tick. Check the static InputMapper keycode defines
     /// </summary>
     public class InputController : MonoBehaviour {
-        
         private static InputController _instance;
 
         public static InputController Instance {
@@ -45,6 +44,10 @@ namespace _1_Game {
             // PLACE BUILDING
             if (Input.GetKeyDown(InputMapper.PLACE_BUILDING.KeyCode) || Input.GetMouseButtonDown(InputMapper.PLACE_BUILDING.MouseButton)) {
                 BuildingController.Instance.PlaceBuilding();
+            }
+            // ROTATE BUILDING
+            if (Input.GetKeyDown(InputMapper.ROTATE_BUILDING.KeyCode)) {
+                BuildingController.Instance.RotateBuilding();
             }
         }
     }

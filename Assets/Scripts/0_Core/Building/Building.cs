@@ -61,6 +61,10 @@ namespace _0_Core.Building {
             _placement = BuildingPlacement.FIXED;
             SetMaterial();
         }
+
+        public void Rotate() {
+            _transform.Find("mesh").Rotate(new Vector3(0, 90, 0), Space.World);
+        }
         
 #region Set & Get
         public void SetPosition(Vector2Int position) {
