@@ -68,7 +68,8 @@ namespace _1_Game {
             if (_currentBuilding == null || _currentBuilding.IsFixed) {
                 return;
             }
-            _currentBuilding.Rotate();
+            // removed for now, i like when the buildings have a random float rotation
+            // _currentBuilding.Rotate();
         }
 
         public void PlaceBuilding() {

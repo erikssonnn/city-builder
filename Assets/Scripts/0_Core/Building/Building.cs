@@ -4,6 +4,7 @@ using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
 using Object = UnityEngine.Object;
+using Random = UnityEngine.Random;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _0_Core.Building {
@@ -39,10 +40,11 @@ namespace _0_Core.Building {
                 Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL);
             }
 
-            GameObject gameObject = Object.Instantiate(prefabs[UnityEngine.Random.Range(0, prefabs.Length)]) as GameObject;
+            GameObject gameObject = Object.Instantiate(prefabs[Random.Range(0, prefabs.Length)]) as GameObject;
             _transform = gameObject.transform;
             _transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
-
+            Rotate(Random.Range(-180, 180));
+            
             // Materials
             _materials = new List<Material>();
             foreach (Material material in _transform.Find("mesh").GetComponent<MeshRenderer>().materials) {
@@ -69,8 +71,8 @@ namespace _0_Core.Building {
             SetMaterial();
         }
 
-        public void Rotate() {
-            _transform.Find("mesh").Rotate(new Vector3(0, 90, 0), Space.World);
+        public void Rotate(int value = 90) {
+            _transform.Find("mesh").Rotate(new Vector3(0, value, 0), Space.World);
         }
         
 #region Set & Get
