@@ -34,11 +34,12 @@ namespace _0_Core.Building {
             _name = data.Name;
             _grid = new Vector2Int[(_size * 2 + 1) * (_size * 2 + 1)];
 
-            GameObject gameObject = Object.Instantiate(Resources.Load($"Prefabs/Buildings/{_data.Name}")) as GameObject;
-            if (gameObject == null) {
+            Object[] prefabs = Resources.LoadAll($"Prefabs/Buildings/{_data.Name}");
+            if (prefabs == null || prefabs.Length == 0) {
                 Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL);
             }
 
+            GameObject gameObject = Object.Instantiate(prefabs[UnityEngine.Random.Range(0, prefabs.Length)]) as GameObject;
             _transform = gameObject.transform;
             _transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
 
