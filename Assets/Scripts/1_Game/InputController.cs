@@ -49,6 +49,10 @@ namespace _1_Game {
             if (Input.GetKeyDown(InputMapper.ROTATE_BUILDING.KeyCode)) {
                 BuildingController.Instance.RotateBuilding();
             }
+            // DELETE BUILDING
+            if (Input.GetKeyDown(InputMapper.DELETE_BUILDING.KeyCode)) {
+                BuildingController.Instance.DeleteBuilding();
+            }
         }
     }
 }

@@ -99,6 +99,22 @@ namespace _1_Game {
             _currentBuilding = null;
         }
 
+        public void DeleteBuilding() {
+            if (_currentBuilding != null) {
+                return;
+            }
+            Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
+                Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
+                Building building = Map.GetBuildingFromPosition(pos);
+                if (building != null) {
+                    Logger.Print($"Delete {building.Name}");
+                    Map.DeleteBuildingPositions(building);
+                    Destroy(building.Transform.gameObject);
+                }
+            }
+        }
+        
         private Vector2Int[] GetGridPositions(Vector2Int pos) {
             int totalPositions = (_currentBuilding.Size * 2 + 1) * (_currentBuilding.Size * 2 + 1);
             Vector2Int[] grid = new Vector2Int[totalPositions];
