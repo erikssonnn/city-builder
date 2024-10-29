@@ -76,7 +76,7 @@ namespace _1_Game {
                 return;
             }
 
-            Map.SetTile(_currentBuilding.Grid, new Tile(TileType.BUILDING, _currentBuilding));
+            Map.SetPositions(_currentBuilding.Grid, _currentBuilding);
             _currentBuilding.Place();
             _currentBuilding = null;
         }

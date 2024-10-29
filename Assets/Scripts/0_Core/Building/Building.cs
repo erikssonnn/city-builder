@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
+using Object = UnityEngine.Object;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _0_Core.Building {
@@ -16,6 +18,8 @@ namespace _0_Core.Building {
         private Transform _transform;
         private Vector2Int[] _grid;
         private int _size;
+        private Guid _id;
+        private string _name;
         private BuildingPlacement _placement;
         
         private List<Material> _materials;
@@ -26,6 +30,8 @@ namespace _0_Core.Building {
             _data = data;
             _placement = BuildingPlacement.VALID;
             _size = data.Size;
+            _id = Guid.NewGuid(); // create new id per instance of building to track allocated map tiles
+            _name = data.Name;
             _grid = new Vector2Int[(_size * 2 + 1) * (_size * 2 + 1)];
 
             GameObject gameObject = Object.Instantiate(Resources.Load($"Prefabs/Buildings/{_data.Name}")) as GameObject;
@@ -108,6 +114,9 @@ namespace _0_Core.Building {
         public Vector2Int[] Grid => _grid;
         public bool IsFixed => _placement == BuildingPlacement.FIXED;
         public int Size => _size;
-#endregion
+        public Guid Id => _id;
+        public string Name => _name;
+
+        #endregion
     }
 }

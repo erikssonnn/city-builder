@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _0_Core.Building;
 using _0_Core.Map;
 using erikssonn;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace _1_Game {
             }
             
             // map
-            foreach (KeyValuePair<Vector2Int, Tile> tile in Map.GetMap()) {
+            foreach (KeyValuePair<Vector2Int, Building> tile in Map.DebugMap()) {
                 Gizmos.color = Color.red;
                 Gizmos.DrawCube(new Vector3(tile.Key.x, 0, tile.Key.y),  new Vector3(1f, 0.1f, 1f));
             }
