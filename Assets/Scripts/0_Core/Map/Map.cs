@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _0_Core.Entity.Terrain;
 using erikssonn;
 using Logger = erikssonn.Logger;
 using Random = System.Random;
@@ -38,17 +39,6 @@ namespace _0_Core.Map {
         }
 
         /// <summary>
-        /// Deletes all positions related to a building
-        /// </summary>
-        /// <param name="building"></param>
-        public static void DeleteBuildingPositions(Building.Building building) {
-            List<Vector2Int> positionsToDelete = (from tile in _map where tile.Value.Building.Id == building.Id select tile.Key).ToList();
-            foreach (Vector2Int t in positionsToDelete) {
-                _map.Remove(t);
-            }
-        }
-
-        /// <summary>
         /// Get a random position from the map that is not taken using a grid of positions
         /// </summary>
         /// <returns></returns>
@@ -76,7 +66,10 @@ namespace _0_Core.Map {
             return null;
         }
 
+        public static void DeleteBuildingPositions(Building.Building building) => building.Grid.ToList().ForEach(t => _map.Remove(t));
+        public static void DeleteTerrainPositions(Terrain terrain) => terrain.Grid.ToList().ForEach(t => _map.Remove(t));
         public static Building.Building GetBuildingFromPosition(Vector2Int position) => _map.Where(tile => tile.Key.Equals(position)).Select(tile => tile.Value.Building).FirstOrDefault();
+        public static Terrain GetTerrainFromPosition(Vector2Int position) => _map.Where(tile => tile.Key.Equals(position)).Select(tile => tile.Value.Terrain).FirstOrDefault();
         public static bool IsFree(Vector2Int position) => _map.All(val => val.Key != position);
 
         public static bool IsInsideMap(Vector2Int position) =>

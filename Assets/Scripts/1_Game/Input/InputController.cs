@@ -1,4 +1,5 @@
 using _0_Core.Input;
+using _1_Game.Entity.Terrain;
 using UnityEngine;
 using erikssonn;
 using Logger = erikssonn.Logger;
@@ -29,6 +30,8 @@ namespace _1_Game {
         }
         
         private void Update() {
+            #region  BUILDINGS
+
             // BUILDING 1
             if (Input.GetKeyDown(InputMapper.BUILDING_1.KeyCode)) {
                 BuildingController.Instance.StartPlacingBuilding(0);
@@ -53,6 +56,17 @@ namespace _1_Game {
             if (Input.GetKeyDown(InputMapper.DELETE_BUILDING.KeyCode)) {
                 BuildingController.Instance.DeleteBuilding();
             }
+
+            #endregion
+            
+            #region TERRAIN
+
+            // DELETE TERRAIN
+            if (Input.GetKeyDown(InputMapper.DELETE_BUILDING.KeyCode)) {
+                TerrainController.Instance.DeleteTerrain();
+            }
+
+            #endregion
         }
     }
 }

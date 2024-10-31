@@ -108,8 +108,8 @@ namespace _1_Game {
             if (Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
                 Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
                 Building building = Map.GetBuildingFromPosition(pos);
+
                 if (building != null) {
-                    Logger.Print($"Delete {building.Name}");
                     Map.DeleteBuildingPositions(building);
                     building.Destroy();
                 }

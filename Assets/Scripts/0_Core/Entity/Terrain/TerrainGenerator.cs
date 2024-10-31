@@ -19,7 +19,7 @@ namespace _0_Core.Entity.Terrain {
                     
                     if(TryPlaceTerrain(terrain)) {
                         _tries = 0;
-                        Map.Map.SetPositions(terrain.Grid, new Tile(TileType.TERRAIN, null));
+                        Map.Map.SetPositions(terrain.Grid, new Tile(TileType.TERRAIN, null, terrain));
                     } else {
                         terrain.Destroy();
                         Logger.Print($"Tries to place {terrain.Name} but could not find a suitable place for it!", LogLevel.WARNING);
