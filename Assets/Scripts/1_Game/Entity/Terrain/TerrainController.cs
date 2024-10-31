@@ -27,10 +27,10 @@ namespace _1_Game.Entity.Terrain {
 
         private void OnEnable() {
             if (_instance != null && _instance != this) {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             } else {
                 _instance = this;
-                DontDestroyOnLoad(this.gameObject);
+                DontDestroyOnLoad(gameObject);
             }
             
             _cam = Camera.main;
@@ -39,15 +39,17 @@ namespace _1_Game.Entity.Terrain {
 
         public void DeleteTerrain() {
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
-                Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
-                _0_Core.Entity.Terrain.Terrain terrain = Map.GetTerrainFromPosition(pos);
-                
-                if (terrain != null) {
-                    Map.DeleteTerrainPositions(terrain);
-                    terrain.Destroy();
-                }
+            if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
+                return;
             }
+            Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
+            _0_Core.Entity.Terrain.Terrain terrain = Map.GetTerrainFromPosition(pos);
+
+            if (terrain == null) {
+                return;
+            }
+            Map.DeleteTerrainPositions(terrain);
+            terrain.Destroy();
         }
     }
 }

@@ -38,10 +38,10 @@ namespace _1_Game {
 
         private void OnEnable() {
             if (_instance != null && _instance != this) {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             } else {
                 _instance = this;
-                DontDestroyOnLoad(this.gameObject);
+                DontDestroyOnLoad(gameObject);
             }
 
             _cam = Camera.main;
@@ -105,15 +105,17 @@ namespace _1_Game {
                 return;
             }
             Ray ray = _cam.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
-                Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
-                Building building = Map.GetBuildingFromPosition(pos);
-
-                if (building != null) {
-                    Map.DeleteBuildingPositions(building);
-                    building.Destroy();
-                }
+            if (!Physics.Raycast(ray, out RaycastHit hit, 1000f, Globals.TERRAIN_LAYER_MASK)) {
+                return;
             }
+            Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
+            Building building = Map.GetBuildingFromPosition(pos);
+
+            if (building == null) {
+                return;
+            }
+            Map.DeleteBuildingPositions(building);
+            building.Destroy();
         }
         
         private Vector2Int[] GetGridPositions(Vector2Int pos) {
