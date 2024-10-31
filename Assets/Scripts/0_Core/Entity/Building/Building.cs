@@ -46,6 +46,13 @@ namespace _0_Core.Building {
             GameObject gameObject = Object.Instantiate(prefabs[Random.Range(0, prefabs.Length)]) as GameObject;
             _transform = gameObject.transform;
             _transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
+            
+            GameObject parent = GameObject.Find("map_buildings");
+            if (parent == null) {
+                Logger.Print("Cant find map_buildings", LogLevel.WARNING);
+            }
+            _transform.SetParent(parent.transform, false);
+            
             Rotate(Random.Range(-180, 180));
 
             // Materials

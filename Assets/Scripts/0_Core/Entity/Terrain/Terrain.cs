@@ -33,6 +33,13 @@ namespace _0_Core.Entity.Terrain {
 
             GameObject gameObject = Object.Instantiate(prefabs[Random.Range(0, prefabs.Length)]) as GameObject;
             _transform = gameObject.transform;
+            
+            GameObject parent = GameObject.Find("map_terrain");
+            if (parent == null) {
+                Logger.Print("Cant find map_terrain", LogLevel.WARNING);
+            }
+            _transform.SetParent(parent.transform, false);
+            
             Rotate(Random.Range(-180, 180));
         }
 
