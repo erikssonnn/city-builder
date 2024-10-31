@@ -11,7 +11,7 @@ namespace _1_Game {
         private const float downScale = 0.1f;
         private Vector2Int mapLimit = Vector2Int.zero;
     
-        private void Start() {
+        private void OnEnable() {
             cam = Camera.main;
             if (cam == null) {
                 throw new System.Exception("Cant find main camera!");

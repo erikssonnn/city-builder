@@ -19,7 +19,7 @@ namespace _1_Game {
             }
         }
 
-        private void Awake() {
+        private void OnEnable() {
             if (_instance != null && _instance != this) {
                 Destroy(this.gameObject);
             } else {
