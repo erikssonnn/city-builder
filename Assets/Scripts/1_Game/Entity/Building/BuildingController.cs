@@ -84,7 +84,7 @@ namespace _1_Game {
 
         public void StartPlacingBuilding(int buildingIndex) {
             if (_currentBuilding != null && !_currentBuilding.IsFixed) {
-                Destroy(_currentBuilding.Transform.gameObject);
+                _currentBuilding.Destroy();
             }
 
             Building building = new Building(Globals.BUILDING_DATA[buildingIndex]);
@@ -96,7 +96,7 @@ namespace _1_Game {
                 return;
             }
 
-            Destroy(_currentBuilding.Transform.gameObject);
+            _currentBuilding.Destroy();
             _currentBuilding = null;
         }
 
@@ -111,7 +111,7 @@ namespace _1_Game {
                 if (building != null) {
                     Logger.Print($"Delete {building.Name}");
                     Map.DeleteBuildingPositions(building);
-                    Destroy(building.Transform.gameObject);
+                    building.Destroy();
                 }
             }
         }

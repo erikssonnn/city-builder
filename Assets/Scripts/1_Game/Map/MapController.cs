@@ -24,7 +24,7 @@ namespace _1_Game {
             };
 
             for (int i = 0; i < 4; i++) {
-                GameObject mapCorner = Instantiate(Resources.Load("Prefabs/Buildings/other/construction_pole"), parent.transform, false) as GameObject;
+                GameObject mapCorner = Instantiate(Resources.Load("Prefabs/Entity/Building/other/construction_pole"), parent.transform, false) as GameObject;
                 if (mapCorner == null) {
                     Logger.Print("Cant find construction_pole in Resources", LogLevel.WARNING);
                     return;

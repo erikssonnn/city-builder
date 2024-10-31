@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using erikssonn;
 using Logger = erikssonn.Logger;
+using Random = System.Random;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
 namespace _0_Core.Map {
@@ -47,10 +48,40 @@ namespace _0_Core.Map {
             }
         }
 
+        /// <summary>
+        /// Get a random position from the map that is not taken using a grid of positions
+        /// </summary>
+        /// <returns></returns>
+        public static Vector2Int? GetRandomFreePosition() {
+            Random random = new Random();
+            HashSet<Vector2Int> attemptedPositions = new HashSet<Vector2Int>();
+            int maxAttempts = (Size + 1) * (Size + 1);
+
+            while (attemptedPositions.Count < maxAttempts) {
+                int x = random.Next(-Size / 2, Size / 2 + 1);
+                int y = random.Next(-Size / 2, Size / 2 + 1);
+                Vector2Int position = new Vector2Int(x, y);
+
+                if (attemptedPositions.Contains(position)) {
+                    continue;
+                }
+                
+                attemptedPositions.Add(position);
+
+                if (IsFree(position) && IsInsideMap(position)) {
+                    return position;
+                }
+            }
+
+            return null;
+        }
+
         public static Building.Building GetBuildingFromPosition(Vector2Int position) => _map.Where(tile => tile.Key.Equals(position)).Select(tile => tile.Value.Building).FirstOrDefault();
         public static bool IsFree(Vector2Int position) => _map.All(val => val.Key != position);
+
         public static bool IsInsideMap(Vector2Int position) =>
             position.x <= Size / 2 && position.x >= -Size / 2 && position.y <= Size / 2 && position.y >= -Size / 2;
+
         public static int Size => 64;
         public static Dictionary<Vector2Int, Tile> DebugMap() => _map; // only used for gizmos
         public static void Clear() => _map.Clear();

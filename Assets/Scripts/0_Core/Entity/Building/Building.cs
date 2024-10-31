@@ -14,6 +14,9 @@ namespace _0_Core.Building {
         FIXED
     }
 
+    /// <summary>
+    /// Building object used as a container for the map and when creating buildings
+    /// </summary>
     public class Building {
         private BuildingData _data;
         private Transform _transform;
@@ -22,7 +25,7 @@ namespace _0_Core.Building {
         private Guid _id;
         private string _name;
         private BuildingPlacement _placement;
-        
+
         private List<Material> _materials;
         private Material _validMaterial;
         private Material _invalidMaterial;
@@ -35,7 +38,7 @@ namespace _0_Core.Building {
             _name = data.Name;
             _grid = new Vector2Int[(_size * 2 + 1) * (_size * 2 + 1)];
 
-            Object[] prefabs = Resources.LoadAll($"Prefabs/Buildings/{_data.Name}");
+            Object[] prefabs = Resources.LoadAll($"Prefabs/Entity/Building/{_data.Name}");
             if (prefabs == null || prefabs.Length == 0) {
                 Logger.Print($"Cant find {_data.Name} when creating building", LogLevel.FATAL);
             }
@@ -44,7 +47,7 @@ namespace _0_Core.Building {
             _transform = gameObject.transform;
             _transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
             Rotate(Random.Range(-180, 180));
-            
+
             // Materials
             _materials = new List<Material>();
             foreach (Material material in _transform.Find("mesh").GetComponent<MeshRenderer>().materials) {
@@ -61,10 +64,11 @@ namespace _0_Core.Building {
                     _placement = BuildingPlacement.INVALID;
                     break;
                 }
+
                 _placement = BuildingPlacement.VALID;
             }
         }
-        
+
         public void Place() {
             _transform.localScale = new Vector3(1f, 1f, 1f);
             _placement = BuildingPlacement.FIXED;
@@ -74,8 +78,13 @@ namespace _0_Core.Building {
         public void Rotate(int value = 90) {
             _transform.Find("mesh").Rotate(new Vector3(0, value, 0), Space.World);
         }
-        
-#region Set & Get
+
+        public void Destroy() {
+            Object.Destroy(_transform.gameObject);
+        }
+
+        #region Set & Get
+
         public void SetPosition(Vector2Int position) {
             _transform.position = new Vector3(position.x, 0, position.y);
         }
@@ -94,6 +103,7 @@ namespace _0_Core.Building {
                     for (int i = 0; i < _materials.Count; i++) {
                         materials.Add(_validMaterial);
                     }
+
                     break;
                 }
                 case BuildingPlacement.INVALID: {
@@ -101,6 +111,7 @@ namespace _0_Core.Building {
                     for (int i = 0; i < _materials.Count; i++) {
                         materials.Add(_invalidMaterial);
                     }
+
                     break;
                 }
                 case BuildingPlacement.FIXED:
