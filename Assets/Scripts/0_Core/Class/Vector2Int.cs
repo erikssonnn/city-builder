@@ -5,8 +5,9 @@ namespace _0_Core.Class {
     /// Custom Vector2Int class to remove unity implementation in low level
     /// </summary>
     public readonly struct Vector2Int : IEquatable<Vector2Int> {
-        public int x { get; } // keeping lowercase for consistency
-        public int y { get; } // keeping lowercase for consistency
+        // keeping lowercase for consistency
+        public int x { get; }
+        public int y { get; }
 
         public Vector2Int(int x, int y) {
             this.x = x;
