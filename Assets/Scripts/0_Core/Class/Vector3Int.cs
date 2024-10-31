@@ -4,11 +4,11 @@ namespace _0_Core.Class {
     /// <summary>
     /// Custom Vector3Int class to remove unity implementation in low level
     /// </summary>
-    public readonly struct Vector3Int : IEquatable<Vector3Int> {
+    public struct Vector3Int : IEquatable<Vector3Int> {
         // keeping lowercase for consistency
-        public int x { get; }
-        public int y { get; }
-        public int z { get; } 
+        public int x { get; set; }
+        public int y { get; set; }
+        public int z { get; set; } 
 
         public Vector3Int(int x, int y, int z) {
             this.x = x;
