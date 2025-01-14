@@ -4,15 +4,16 @@ using _0_Core.Map;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
+using Terrain = _0_Core.Entity.Terrain;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
-namespace _1_Game.Entity.Terrain {
+namespace _1_Game._Entity._Terrain {
     /// <summary>
     /// Only used to create terrain objects and destroying them using unity
     /// For the generation code see TerrainGenerator.cs
     /// </summary>
     public class TerrainController : MonoBehaviour {
-        private Camera _cam;
+        private UnityEngine.Camera _cam;
         private static TerrainController _instance;
 
         public static TerrainController Instance {
@@ -33,7 +34,7 @@ namespace _1_Game.Entity.Terrain {
                 DontDestroyOnLoad(gameObject);
             }
             
-            _cam = Camera.main;
+            _cam = UnityEngine.Camera.main;
             TerrainGenerator.Generate();
         }
 
@@ -43,7 +44,7 @@ namespace _1_Game.Entity.Terrain {
                 return;
             }
             Vector2Int pos = new Vector2Int(Mathf.RoundToInt(hit.point.x), Mathf.FloorToInt(hit.point.z));
-            _0_Core.Entity.Terrain.Terrain terrain = Map.GetTerrainFromPosition(pos);
+            Terrain.Terrain terrain = Map.GetTerrainFromPosition(pos);
 
             if (terrain == null) {
                 return;

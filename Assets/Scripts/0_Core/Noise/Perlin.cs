@@ -1,61 +1,71 @@
 using System;
-using Vector2 = System.Numerics.Vector2;
 
 namespace _0_Core.Noise {
     public static class Perlin {
-        private static float Interpolate(float a, float b, float w) {
-            if (0.0f > w)
-                return a;
-            if (1.0f < w)
-                return b;
+        private static int[] permutationTable;
+        private static int[] p;
 
-            return (b - a) * w + a;
-        }
+        static Perlin() {
+            permutationTable = new int[512];
+            p = new int[256];
 
-        private static Vector2 RandomGradient(int ix, int iy) {
-            const int w = 8 * sizeof(int);
-            const int s = w / 2;
+            for (int i = 0; i < 256; i++) {
+                p[i] = i;
+            }
 
-            uint a = (uint)ix;
-            uint b = (uint)iy;
+            Random rand = new Random();
+            for (int i = 0; i < 256; i++) {
+                int j = rand.Next(256);
+                (p[i], p[j]) = (p[j], p[i]);
+            }
 
-            a *= 3284157443;
-            b ^= a << s | a >> w - s;
-            b *= 1911520717;
-            a ^= b << s | b >> w - s;
-            a *= 2048419325;
-
-            float random = a * ((float)3.14159265 / ~(~0u >> 1));
-            return new Vector2((float)Math.Cos(random), (float)Math.Sin(random));
-        }
-
-        private static float DotGridGradient(int ix, int iy, float x, float y) {
-            Vector2 gradient = RandomGradient(ix, iy);
-
-            float dx = x - ix;
-            float dy = y - iy;
-
-            return (dx * gradient.X + dy * gradient.Y);
+            for (int i = 0; i < 256; i++) {
+                permutationTable[i] = p[i];
+                permutationTable[i + 256] = p[i];
+            }
         }
 
         public static float Noise(float x, float y) {
-            int x0 = (int)Math.Floor(x);
-            int x1 = x0 + 1;
-            int y0 = (int)Math.Floor(y);
-            int y1 = y0 + 1;
+            int tempX = (int)Math.Floor(x) & 255;
+            int tempY = (int)Math.Floor(y) & 255;
 
-            float sx = x - x0;
-            float sy = y - y0;
+            x -= (float)Math.Floor(x);
+            y -= (float)Math.Floor(y);
 
-            float n0 = DotGridGradient(x0, y0, x, y);
-            float n1 = DotGridGradient(x1, y0, x, y);
-            float ix0 = Interpolate(n0, n1, sx);
+            float u = Fade(x);
+            float v = Fade(y);
 
-            n0 = DotGridGradient(x0, y1, x, y);
-            n1 = DotGridGradient(x1, y1, x, y);
-            float ix1 = Interpolate(n0, n1, sx);
+            int A = permutationTable[tempX] + tempY;
+            int AA = permutationTable[A];
+            int AB = permutationTable[A + 1];
+            int B = permutationTable[tempX + 1] + tempY;
+            int BA = permutationTable[B];
+            int BB = permutationTable[B + 1];
 
-            return Interpolate(ix0, ix1, sy);
+            float gradAA = Grad(permutationTable[AA], x, y);
+            float gradAB = Grad(permutationTable[AB], x, y - 1);
+            float gradBA = Grad(permutationTable[BA], x - 1, y);
+            float gradBB = Grad(permutationTable[BB], x - 1, y - 1);
+
+            float lerpX1 = Lerp(gradAA, gradBA, u);
+            float lerpX2 = Lerp(gradAB, gradBB, u);
+
+            return Lerp(lerpX1, lerpX2, v);
+        }
+
+        private static float Fade(float t) {
+            return t * t * t * (t * (t * 6 - 15) + 10);
+        }
+
+        private static float Lerp(float a, float b, float t) {
+            return a + t * (b - a);
+        }
+
+        private static float Grad(int hash, float x, float y) {
+            int h = hash & 15;
+            float u = h < 8 ? x : y;
+            float v = h < 4 ? y : (h == 12 || h == 14 ? x : 0);
+            return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
         }
     }
 }

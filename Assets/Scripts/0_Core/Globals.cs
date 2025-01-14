@@ -1,5 +1,5 @@
 using System;
-using _0_Core.Building;
+using _0_Core.Entity.Building;
 using _0_Core.Entity.Terrain;
 
 namespace _0_Core {
@@ -15,5 +15,6 @@ namespace _0_Core {
 		};
 		
 		public static int TERRAIN_LAYER_MASK = 1 << 7;
+		public static int MAP_SIZE = 64;
 	}
 }

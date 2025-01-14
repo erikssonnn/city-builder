@@ -1,7 +1,7 @@
 using _0_Core.Map;
 using UnityEngine;
 
-namespace _1_Game {
+namespace _1_Game._Camera {
     public class CameraController : MonoBehaviour {
         [SerializeField] private float panSpeed = 0.0f;
         [SerializeField] private float scrollPanSpeed = 0.0f;

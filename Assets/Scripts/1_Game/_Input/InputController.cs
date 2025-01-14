@@ -1,10 +1,11 @@
 using _0_Core.Input;
-using _1_Game.Entity.Terrain;
-using UnityEngine;
+using _1_Game._Entity._Building;
+using _1_Game._Entity._Terrain;
 using erikssonn;
+using UnityEngine;
 using Logger = erikssonn.Logger;
 
-namespace _1_Game {
+namespace _1_Game._Input {
     /// <summary>
     /// Checks for player input every tick. Check the static InputMapper keycode defines
     /// </summary>
@@ -22,10 +23,10 @@ namespace _1_Game {
 
         private void OnEnable() {
             if (_instance != null && _instance != this) {
-                Destroy(this.gameObject);
+                Destroy(gameObject);
             } else {
                 _instance = this;
-                DontDestroyOnLoad(this.gameObject);
+                DontDestroyOnLoad(gameObject);
             }
         }
         

@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 using Random = UnityEngine.Random;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
-namespace _0_Core.Building {
+namespace _0_Core.Entity.Building {
     public enum BuildingPlacement {
         VALID,
         INVALID,

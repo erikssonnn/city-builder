@@ -1,19 +1,19 @@
 using _0_Core;
-using _0_Core.Building;
+using _0_Core.Entity.Building;
 using _0_Core.Map;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
 using Vector2Int = _0_Core.Class.Vector2Int;
 
-namespace _1_Game {
+namespace _1_Game._Entity._Building {
     /// <summary>
     /// Controls when and how to create and place buildings in the world
     /// </summary>
     public class BuildingController : MonoBehaviour {
         private static BuildingController _instance;
         private Building _currentBuilding;
-        private Camera _cam;
+        private UnityEngine.Camera _cam;
 
         private void OnDrawGizmos() {
             if (_currentBuilding == null || _currentBuilding.Grid == null || _currentBuilding.Grid.Length == 0) {
@@ -44,7 +44,7 @@ namespace _1_Game {
                 DontDestroyOnLoad(gameObject);
             }
 
-            _cam = Camera.main;
+            _cam = UnityEngine.Camera.main;
         }
 
         private void OnDestroy() => Map.Clear();

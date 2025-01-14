@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _0_Core.Entity.Building;
 using _0_Core.Entity.Terrain;
 using erikssonn;
 using Logger = erikssonn.Logger;
@@ -66,16 +67,16 @@ namespace _0_Core.Map {
             return null;
         }
 
-        public static void DeleteBuildingPositions(Building.Building building) => building.Grid.ToList().ForEach(t => _map.Remove(t));
+        public static void DeleteBuildingPositions(Building building) => building.Grid.ToList().ForEach(t => _map.Remove(t));
         public static void DeleteTerrainPositions(Terrain terrain) => terrain.Grid.ToList().ForEach(t => _map.Remove(t));
-        public static Building.Building GetBuildingFromPosition(Vector2Int position) => _map.Where(tile => tile.Key.Equals(position)).Select(tile => tile.Value.Building).FirstOrDefault();
+        public static Building GetBuildingFromPosition(Vector2Int position) => _map.Where(tile => tile.Key.Equals(position)).Select(tile => tile.Value.Building).FirstOrDefault();
         public static Terrain GetTerrainFromPosition(Vector2Int position) => _map.Where(tile => tile.Key.Equals(position)).Select(tile => tile.Value.Terrain).FirstOrDefault();
         public static bool IsFree(Vector2Int position) => _map.All(val => val.Key != position);
 
         public static bool IsInsideMap(Vector2Int position) =>
             position.x <= Size / 2 && position.x >= -Size / 2 && position.y <= Size / 2 && position.y >= -Size / 2;
 
-        public static int Size => 64;
+        public static int Size => Globals.MAP_SIZE;
         public static Dictionary<Vector2Int, Tile> DebugMap() => _map; // only used for gizmos
         public static void Clear() => _map.Clear();
     }
