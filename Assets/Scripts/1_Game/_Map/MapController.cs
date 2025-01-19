@@ -37,7 +37,7 @@ namespace _1_Game._Map {
 
             GameObject meshObject = new GameObject("mesh") {
                 transform = {
-                    position = new Vector3(0.5f, 0, 0.5f)
+                    position = new Vector3(-0.5f, 0, -0.5f)
                 },
                 layer = (int)Mathf.Log(Globals.TERRAIN_LAYER_MASK, 2) // bitshift sorry!
             };
@@ -75,6 +75,7 @@ namespace _1_Game._Map {
                     }
                 }
             }
+
             if (positions.Count > 0) {
                 Map.SetPositions(positions.ToArray(), tile);
             }
@@ -85,7 +86,8 @@ namespace _1_Game._Map {
         }
 
         private static Color32 CalculateColorFromTerrainMap(float value) {
-            if (value < 0.25f) return Color.blue;
+            if (value < 0.15f) return new Color32(0, 0, 255, 255);
+            if (value < 0.25f) return new Color32(75, 75, 225, 255);
             if (value < 0.5f) return RandomBetweenColors(new Color32(126, 107, 2, 255), new Color32(107, 90, 62, 255));
             if (value < 0.75f) return RandomBetweenColors(new Color32(107, 106, 52, 255), new Color32(130, 128, 63, 255));
             return RandomBetweenColors(new Color32(107, 106, 52, 255), new Color32(130, 128, 63, 255));
@@ -95,8 +97,8 @@ namespace _1_Game._Map {
 
         private static float[,] GenerateTerrainMap() {
             float[,] terrainMap = new float[Map.Size, Map.Size];
-            for (int x = 0; x < Map.Size; x++) {
-                for (int y = 0; y < Map.Size; y++) {
+            for (int x = 0; x < terrainMap.GetLength(0); x++) {
+                for (int y = 0; y < terrainMap.GetLength(1); y++) {
                     terrainMap[x, y] = Mathf.PerlinNoise(x * 0.05f, y * 0.05f);
                 }
             }

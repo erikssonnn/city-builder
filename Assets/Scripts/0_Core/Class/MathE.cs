@@ -9,5 +9,6 @@ namespace _0_Core.Class {
 
         public static float Lerp(float a, float b, float t) => a + (b - a) * t;
         public static float RandomValue() => (float)_random.NextDouble();
+        public static int RoundToInt(float value) => value >= 0 ? (int)(value + 0.5f) : (int)(value - 0.5f);
     }
 }

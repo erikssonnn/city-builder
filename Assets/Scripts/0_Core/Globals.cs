@@ -15,6 +15,6 @@ namespace _0_Core {
 		};
 		
 		public static int TERRAIN_LAYER_MASK = 1 << 7;
-		public static int MAP_SIZE = 128;
+		public static int MAP_SIZE = 256;
 	}
 }
