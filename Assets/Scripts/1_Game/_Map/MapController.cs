@@ -1,5 +1,9 @@
+using System.Collections.Generic;
 using _0_Core;
+using _0_Core.Class;
+using _0_Core.Entity.Terrain;
 using _0_Core.Map;
+using _1_Game._HelpFunctions;
 using erikssonn;
 using UnityEngine;
 using Logger = erikssonn.Logger;
@@ -19,24 +23,17 @@ namespace _1_Game._Map {
         };
 
         private void OnEnable() {
-            MapGenerator.Generate();
-            DrawMapMesh();
+            MapGenerator.GenerateVertices();
             SpawnMapCorners();
+            GenerateMesh();
         }
 
-        private void DrawMapMesh() {
-            Vector3[] vertices = new Vector3[MapGenerator.Vertices.Length];
-            for (int i = 0; i < vertices.Length; i++) {
-                vertices[i] = new Vector3(MapGenerator.Vertices[i].x, MapGenerator.Vertices[i].y, MapGenerator.Vertices[i].z);
-            }
-            
-            Mesh mesh = new Mesh {
-                vertices = vertices,
+        private static void GenerateMesh() {
+            Mesh mesh = new Mesh() {
+                vertices = HelpFunctions.Vector3IntToVector3(MapGenerator.Vertices),
                 triangles = MapGenerator.Triangles,
-                uv = CalculateUVs(vertices),
-                normals = CalculateFlatNormals(vertices, MapGenerator.Triangles)
+                uv = HelpFunctions.Vector2IntToVector2(MapGenerator.Uvs),
             };
-            mesh.RecalculateNormals();
 
             GameObject meshObject = new GameObject("mesh") {
                 transform = {
@@ -50,42 +47,76 @@ namespace _1_Game._Map {
             meshCollider.sharedMesh = mesh;
             MeshFilter filter = meshObject.AddComponent<MeshFilter>();
             MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
-            meshRenderer.material = Resources.Load("Materials/ground") as Material;
             filter.mesh = mesh;
-        }
-        
-        private Vector3[] CalculateFlatNormals(Vector3[] vertices, int[] triangles) {
-            Vector3[] normals = new Vector3[vertices.Length];
-        
-            for (int i = 0; i < triangles.Length; i += 3) {
-                int index0 = triangles[i];
-                int index1 = triangles[i + 1];
-                int index2 = triangles[i + 2];
-        
-                Vector3 v0 = vertices[index0];
-                Vector3 v1 = vertices[index1];
-                Vector3 v2 = vertices[index2];
-        
-                Vector3 edge1 = v1 - v0;
-                Vector3 edge2 = v2 - v0;
-                Vector3 normal = Vector3.Cross(edge1, edge2).normalized;
-        
-                normals[index0] = normal;
-                normals[index1] = normal;
-                normals[index2] = normal;
-            }
-        
-            return normals;
-        }
-        
-        private Vector2[] CalculateUVs(Vector3[] vertices) {
-            Vector2[] uvs = new Vector2[vertices.Length];
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            mesh.RecalculateTangents();
 
-            for (int i = 0; i < vertices.Length; i++) {
-                uvs[i] = new Vector2(vertices[i].x, vertices[i].z);
+            float[,] terrainMap = GenerateTerrainMap();
+            Texture2D texture = GenerateTexture(terrainMap);
+            SetWaterOnMap(terrainMap);
+            meshRenderer.material = Resources.Load("Materials/ground") as Material;
+            if (meshRenderer.material == null) {
+                Logger.Print("Failed to load Materials/ground from Resources!", LogLevel.ERROR);
+                return;
             }
 
-            return uvs;
+            meshRenderer.material.mainTexture = texture;
+        }
+
+        private static void SetWaterOnMap(float[,] terrainMap) {
+            Tile tile = new Tile(TileType.TERRAIN);
+            int offset = Map.Size / 2;
+            List<Vector2Int> positions = new List<Vector2Int>();
+            for (int x = 0; x < terrainMap.GetLength(0); x++) {
+                for (int y = 0; y < terrainMap.GetLength(1); y++) {
+                    if (terrainMap[x, y] < 0.25f) {
+                        positions.Add(new Vector2Int(x - offset, y - offset));
+                    }
+                }
+            }
+            if (positions.Count > 0) {
+                Map.SetPositions(positions.ToArray(), tile);
+            }
+        }
+
+        private static Color32 RandomBetweenColors(Color32 col1, Color32 col2) {
+            return MathE.RandomValue() > 0.5f ? col1 : col2;
+        }
+
+        private static Color32 CalculateColorFromTerrainMap(float value) {
+            if (value < 0.25f) return Color.blue;
+            if (value < 0.5f) return RandomBetweenColors(new Color32(126, 107, 2, 255), new Color32(107, 90, 62, 255));
+            if (value < 0.75f) return RandomBetweenColors(new Color32(107, 106, 52, 255), new Color32(130, 128, 63, 255));
+            return RandomBetweenColors(new Color32(107, 106, 52, 255), new Color32(130, 128, 63, 255));
+        }
+
+        private static Color32 ValueToColor(float value) => new Color32((byte)(value * 255), (byte)(value * 255), (byte)(value * 255), 255);
+
+        private static float[,] GenerateTerrainMap() {
+            float[,] terrainMap = new float[Map.Size, Map.Size];
+            for (int x = 0; x < Map.Size; x++) {
+                for (int y = 0; y < Map.Size; y++) {
+                    terrainMap[x, y] = Mathf.PerlinNoise(x * 0.05f, y * 0.05f);
+                }
+            }
+
+            return terrainMap;
+        }
+
+        private static Texture2D GenerateTexture(float[,] terrainMap) {
+            Texture2D texture = new Texture2D(Map.Size, Map.Size, TextureFormat.RGBA32, false);
+
+            for (int y = 0; y < Map.Size; y++) {
+                for (int x = 0; x < Map.Size; x++) {
+                    float value = terrainMap[x, y];
+                    texture.SetPixel(x, y, CalculateColorFromTerrainMap(value));
+                }
+            }
+
+            texture.filterMode = FilterMode.Point;
+            texture.Apply();
+            return texture;
         }
 
         private void SpawnMapCorners() {

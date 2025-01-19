@@ -911,8 +911,8 @@ MonoBehaviour:
   screenJumpMaxLevel: 0.9
   flickeringStrength: 0.002
   flickeringCycle: 111
-  isSlippage: 1
-  isSlippageNoise: 1
+  isSlippage: 0
+  isSlippageNoise: 0
   slippageStrength: 0.0025
   slippageInterval: 1
   slippageScrollSpeed: 33
@@ -922,7 +922,7 @@ MonoBehaviour:
   isMultipleGhost: 1
   multipleGhostStrength: 0.005
   isMonochrome: 0
-  isLowResolution: 1
+  isLowResolution: 0
 --- !u!114 &1827613728
 MonoBehaviour:
   m_ObjectHideFlags: 0
